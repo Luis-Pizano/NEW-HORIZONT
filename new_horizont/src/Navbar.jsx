@@ -1,28 +1,29 @@
-import React from "react"
-import './Navbar.css'
+import React from "react";
+import { Link } from "react-router-dom"; // 👈 Importar Link
+import './Navbar.css';
 
-const Navbar = () =>{
+const Navbar = () => {
     return (
-    <nav>
-        <div class="link-home">
-            <a href="" class="link">Home</a>
-        </div>
-        <ul>
-            <li><a href="#" class="link">Nuestros Ejemplares</a></li>
-            <li><a href="#" class="link">Nuestras Razas</a></li>
-            <li><a href="#"  class="link">Registro</a></li>
-            <li><a href="#" class="link ">Login</a></li>
-            <li><a href="#" class="link">Cuentas</a></li>
-            <li><a href="#"  class="link">Logout</a></li>
+        <nav>
+            <div className="link-home">
+                <Link to="/" className="link">Home</Link> {/* 👈 usar Link */}
+            </div>
+            <ul>
+                <li><Link to="/ejemplares" className="link">Nuestros Ejemplares</Link></li>
+                <li><Link to="/razas" className="link">Nuestras Razas</Link></li>
+                <li><Link to="/registro" className="link">Registro</Link></li>
+                <li><Link to="/login" className="link">Login</Link></li>
+                <li><Link to="/cuentas" className="link">Cuentas</Link></li>
+                <li><Link to="/logout" className="link">Logout</Link></li>
 
-            <form action="#">
-                <div className="buscador">
-                 <input type="search" name="search" id="search"/>
-                </div>
-                
-            </form>
-        </ul>
-    </nav>
-    )
-}
-export default Navbar
+                <form action="#">
+                    <div className="buscador">
+                        <input type="search" name="search" id="search" />
+                    </div>
+                </form>
+            </ul>
+        </nav>
+    );
+};
+
+export default Navbar;
