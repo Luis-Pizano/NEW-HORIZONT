@@ -13,10 +13,16 @@
     width: 420px;
     border-radius: 15px;
     border: rgb(255, 255, 255);
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(20px); 
     padding: 40px 30px;
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.6);
+}
+
+.login{
+    font-size: 36px;
+    color: #fff;
+    margin-bottom: 15px;
 }
 
 .loginForm{
@@ -35,6 +41,7 @@
     border-bottom: solid 1px white;
     color: #fff;
     padding-left: 5px;
+    padding-right: 35px;
 }
 
 .loginForm label {
@@ -46,12 +53,22 @@
 
 }
 
-.loginForm input:focus ~ label{
-    font-size: 0.8rem;
-    transform: translateY(-120%);
-    top: 10px;
+.loginForm input:focus ~ label,
+.loginForm input:not(:placeholder-shown) ~ label {
+  font-size: 0.8rem;
+  transform: translateY(-120%);
+  top: 10px;
 }
 
+
+.loginForm i{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    color: #fff;
+    cursor: pointer;
+}
 
 .Submit {
     width: 100%;
@@ -62,11 +79,12 @@
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 1.2rem;
   }
   
-  .Submit:hover {
+.Submit:hover {
     background: #c0c0c0;
     color: black;
     border: 2px solid #c0c0c0;
-  }
+}
   
