@@ -16,6 +16,9 @@ const Login = () => {
         <input type="password" name="password" id="password" placeholder=" " />
           <label>Contraseña</label>
         </div>
+        <div className={styles.return_login}>
+          <a href="/registro" className={styles.not_register}>¿No estas registrado?, registrate</a>
+        </div>
         <button type="submit" className = {styles.Submit}>Login</button>
       </div>
     </div>

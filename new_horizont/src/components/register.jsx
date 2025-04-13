@@ -38,7 +38,7 @@ const Register = () =>{
                             <input type="password" name="password" id="password" required/>
                         </div>
                         <div className={styles.return_login}>
-                        <a href="/login">¿Ya esta registrado?, inicia sesion</a>
+                        <a href="/login" className={styles.exintente_register}>¿Ya esta registrado?, inicia sesion</a>
                         </div>
                         <button type="submit" className={styles.btn_register}>Registrarse</button>
                     </form>

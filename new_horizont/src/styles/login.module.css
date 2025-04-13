@@ -70,6 +70,10 @@
     cursor: pointer;
 }
 
+.not_register:hover{
+    color: #fff !important;
+}
+
 .Submit {
     width: 100%;
     position: relative;
