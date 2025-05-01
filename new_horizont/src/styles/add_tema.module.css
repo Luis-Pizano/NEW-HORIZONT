@@ -1,0 +1,90 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.fondo{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url("./images/subir_archivo.jpg") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    top: 0px; /* Aquí bajas el inicio 70px */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+form h2{
+    color: #fff;
+    font-size: 36px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form input[type=text]{
+    height: 40px;
+    border: solid 1px black;
+    outline: none;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.form input[type="text"]:focus{
+    border: solid 2px black;
+}
+
+.form input[type="file"]{
+    color: #fff;
+}
+
+.form label{
+    font-size: 18px;
+}
+
+.contenido{
+    margin-top: 260px;
+    margin-bottom: 20px;
+    width: 420px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    padding: 30px 40px;
+    border-radius: 15px;
+    border: solid 2px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.5);
+}
+
+.descripcion{
+    height: 250px; /* Aumenta el alto */
+    width: 100%;   /* O fija un ancho específico como 600px */
+    resize: vertical;
+    padding: 5px;
+    background: rgb(231, 228, 228);
+}
+
+.submit{
+    width: 100%;
+    position: relative;
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: 2px solid white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.submit:hover {
+    background: #c0c0c0;
+    color: black;
+    border: 2px solid #c0c0c0;
+}

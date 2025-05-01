@@ -45,6 +45,25 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+
+app.post('/api/add_tema', async (req, res) => {
+    const [nombre, descripcion, file] = req.body;
+
+    try{
+        await sql.connect(dbConfig);
+
+        await sql.query(
+            `INSERT INTO ARCHIVOS_TEMAS_USUARIOS (nombre,descripcion,imagen)
+            VALUES (${nombre},${descripcion},${file})`
+        )
+        res.status(ok).json({message:'Exito al ingresar valores'})
+
+    } catch (error){
+        console.error(`Ocurrio un error al intentar subir el contenido, error: ${error}`)
+        res.status(500).json({message:"Ocurrio un error al intentar insertar los registros"})
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });

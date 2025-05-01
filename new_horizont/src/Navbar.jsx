@@ -9,7 +9,7 @@ const Navbar = () => {
                 <Link to="/" className="link">Home</Link>
             </div>
             <ul>
-                <li><Link to="/ejemplares" className="link">Nuestros Ejemplares</Link></li>
+                <li><Link to="/Subir_elemento" className="link">Subir contenido</Link></li>
                 <li><Link to="/razas" className="link">Nuestras Razas</Link></li>
                 <li><Link to="/registro" className="link">Registro</Link></li>
                 <li><Link to="/login" className="link">Login</Link></li>
@@ -21,6 +21,10 @@ const Navbar = () => {
                         <input type="search" name="search" id="search" />
                     </div>
                 </form>
+
+                <div className="icon-burger">
+                    <i className="fa-solid fa-bars"></i>
+                </div>
             </ul>
         </nav>
     );
