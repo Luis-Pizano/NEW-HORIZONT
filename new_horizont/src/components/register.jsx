@@ -27,7 +27,7 @@ const Register = () => {
     // Función que se ejecuta al enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
-
+    
         try {
             // Se realiza una solicitud POST a la API de registro con los datos del formulario
             const response = await fetch("http://localhost:8080/api/register", {
@@ -37,17 +37,18 @@ const Register = () => {
                 },
                 body: JSON.stringify(formData) // Convierte el objeto formData en JSON
             });
-
+    
             // Se espera la respuesta de la API y se convierte a JSON
             const data = await response.json();
-
+            console.log("Respuesta de la API:", data); // Verifica lo que llega
+    
             // Si la respuesta fue exitosa, se muestra un mensaje y se redirige al login
             if (response.ok) {
                 alert("Registro exitoso");
                 Navigate("/Login");
             } else {
                 // Si hubo un error, se muestra el mensaje de error recibido desde el backend
-                alert("Error en el registro: " + data.error);
+                alert("Error en el registro: " + (data.error || 'Error desconocido'));
             }
         } catch (error) {
             // Manejo de errores de red u otros problemas
@@ -55,7 +56,7 @@ const Register = () => {
             alert("Ocurrió un error al enviar el formulario.");
         }
     };
-
+    
     // A partir de aquí se retorna el formulario que ve el usuario
 
 

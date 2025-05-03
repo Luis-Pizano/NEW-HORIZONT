@@ -5,3 +5,4 @@
 * npm init -y
 * npm install express mssql cors <= Esto instala la dependencia para conectar el proyecto con sql server
 * npm install bcrypt <= Esto permite encriptar contraseñas
+* npm install multer <= Esto permite guardar los archivos tipo imagenes, evitando errores en el backend que los interpreta como binarios
