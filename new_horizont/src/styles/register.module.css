@@ -113,6 +113,14 @@ input:focus{
     border: 2px solid #c0c0c0;
 }
 
+.error{
+    position: fixed;
+    top: 50%;
+    right: 7%;
+    color: red;
+}
+
+
 @media screen and (max-width: 720px) {
     .contenido {
       width: 95%;

@@ -3,6 +3,7 @@ import styles from "../styles/register.module.css";
 import { Navigate, useNavigate } from "react-router-dom";
 const Register = () => {
     // Estado local para almacenar los datos del formulario
+    const [phoneError, setPhoneError] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         last_name_father: "",
@@ -18,6 +19,14 @@ const Register = () => {
     // Maneja los cambios en los inputs del formulario y actualiza el estado formData
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === "phone_number") {
+            const onlyNumbers = /^[0-9]*$/;
+            if (!onlyNumbers.test(value)) {
+                setPhoneError("Solo puede ingresar números");
+            } else {
+                setPhoneError("");
+            }
+        }
         setFormData({
             ...formData,
             [name]: value
@@ -84,6 +93,7 @@ const Register = () => {
                         <div className={styles.formGroup}>
                             <label htmlFor="phone_number">Teléfono</label>
                             <input type="text" name="phone_number" id="phone_number" maxLength={9} value={formData.phone_number} onChange={handleChange} required />
+                            {phoneError && <p className={styles.error}>{phoneError}</p>}
                         </div>
 
                         <div className={styles.formGroup}>

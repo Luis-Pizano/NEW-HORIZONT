@@ -5,6 +5,7 @@ import Home from "./components/home";
 import Login from "./components/login";
 import Register from "./components/register";
 import File from "./components/add_tema";
+import Get_them from "./components/get_themes"
 import PageNotFound from "./components/404";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Registro" element={<Register />}></Route>
           <Route path="/Subir_elemento" element= {<File />}></Route>
+          <Route path="/Temas" element= {<Get_them />}></Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

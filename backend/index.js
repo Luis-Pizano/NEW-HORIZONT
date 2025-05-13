@@ -41,14 +41,15 @@ app.post('/api/register', async (req, res) => {
     try {
         // Encriptar la contraseña
         const hashedPassword = await bcrypt.hash(password, 10); // 10 es el número de rondas de sal
+        const admin = 0
 
         // Conectar a la base de datos
         await sql.connect(dbConfig);
 
         // Ejecutar la inserción con la contraseña encriptada
         await sql.query`
-            INSERT INTO CUENTAS (nombre, apellido_paterno, apellido_materno, telefono, correo, contraseña)
-            VALUES (${name}, ${last_name_father}, ${last_name_Mother}, ${phone_number}, ${email}, ${hashedPassword})
+            INSERT INTO CUENTAS (nombre, apellido_paterno, apellido_materno, telefono, correo, contraseña,visitante,administrador)
+            VALUES (${name}, ${last_name_father}, ${last_name_Mother}, ${phone_number}, ${email}, ${hashedPassword},1,${admin})
         `;
 
         res.status(200).json({ message: 'Registro exitoso con contraseña encriptada' });
@@ -70,7 +71,7 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
         // Preparar la consulta SQL con parámetros para prevenir inyección SQL
         const request = new sql.Request();
         request.input('nombre', sql.VarChar(255), nombre.toUpperCase());
-        request.input('descripcion', sql.VarChar(sql.MAX), descripcion.toUpperCase());
+        request.input('descripcion', sql.VarChar(sql.MAX), descripcion);
         request.input('imagen', sql.VarBinary(sql.MAX), uploadFile);  // Almacenar el archivo binario
 
         // Ejecutar la inserción de los datos en la tabla
@@ -86,6 +87,19 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
         res.status(500).json({ message: 'Ocurrió un error al intentar insertar los registros.' });
     }
 });
+
+app.get('/api/all_temas', async (req,res) =>{
+    try{
+        await sql.connect(dbConfig)
+
+       const result = await sql.query(`SELECT * FROM TEMAS_USUARIOS`)
+        res.status(200).json({message:`Exito en la operacion GET.`, data: result.recordset})
+        console.log(`exito en la consulta Select`)
+    } catch(error){
+        res.status(500).json({message:`Ocurrio un error en el servidor al intentar hacer el GET de la información.`})
+        console.error(`Error en el Get, error ${error}`)
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

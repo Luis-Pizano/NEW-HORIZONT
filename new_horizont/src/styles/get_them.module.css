@@ -1,0 +1,113 @@
+/* get_them.module.css */
+.fondo {
+    position: fixed;
+    width: 100%;
+    inset: 0;
+    background-color: grey;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.container {
+    position: relative;
+    padding: 2rem;
+}
+
+.contenido h1 {
+    position: relative;
+    margin-top: 25px;
+    color: #fff;
+}
+
+.section_cards{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+}
+
+.cardContainer {
+    perspective: 1000px;
+    width: 300px;
+    height: 300px;
+}
+
+/* Transformación de carta en objeto 3D*/
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease-in-out;
+}
+/* Rotación al hacer hover */
+.cardContainer:hover .card {
+    transform: rotateY(180deg);
+}
+
+/* Flip effect */
+.front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 1rem;
+}
+
+.front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-bottom: 1px solid #ccc;
+}
+
+.back {
+    background-color: #f0f0f0;
+    transform: rotateY(180deg);
+    overflow-y: auto;
+    align-content: justify;
+}
+
+.back p{
+    margin-top: auto;
+}
+
+/*.section_cards:hover .cardContainer:not(:hover) .card {
+    filter: grayscale(100%) brightness(0.7);
+    transition: filter 0.3s ease;
+}*/
+
+.btn_redirect{
+    background: #3b82f6;
+    outline: none;
+    border: #3b82f6;
+    border-radius: 20px;
+    margin-top: auto;
+    color: #fff;
+}
+
+.btn_redirect:hover{
+    background-color: #245ebd;
+    transition: 0.5 ease-in-out;
+}
+
+@media (width <= 768px) {
+    .section_cards{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 1023px) {
+    .section_cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
