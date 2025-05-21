@@ -12,8 +12,9 @@ const Get_them = () => {
             if (result.data && Array.isArray(result.data)) {
                 const temasImagen = result.data.map(tema => ({
                     ...tema,
-                    imagen: tema.imagen ? btoa(String.fromCharCode(...new Uint8Array(tema.imagen.data))) : null
+                     imagen: tema.imagen ? tema.imagen : null
                 }));
+                console.log("✅ Datos recibidos del backend:", temasImagen);
 
                 setTemas(temasImagen);
             } else {
@@ -39,7 +40,7 @@ const Get_them = () => {
                                 <div className={styles.card}>
                                     <div className={styles.front}>
                                         {tema.imagen && (
-                                            <img src={`data:image/jpeg;base64,${tema.imagen}`} alt={`Imagen de ${tema.nombre}`}/>
+                                            <img src={`data:${tema.mime_type};base64,${tema.imagen}`} alt={`Imagen de ${tema.nombre}`} />
                                         )}
                                         <h2>{tema.nombre}</h2>
                                     </div>

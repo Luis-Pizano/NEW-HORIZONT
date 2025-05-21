@@ -88,18 +88,44 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     }
 });
 
-app.get('/api/all_temas', async (req,res) =>{
-    try{
-        await sql.connect(dbConfig)
+app.get('/api/all_temas', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
 
-       const result = await sql.query(`SELECT * FROM TEMAS_USUARIOS`)
-        res.status(200).json({message:`Exito en la operacion GET.`, data: result.recordset})
-        console.log(`exito en la consulta Select`)
-    } catch(error){
-        res.status(500).json({message:`Ocurrio un error en el servidor al intentar hacer el GET de la información.`})
-        console.error(`Error en el Get, error ${error}`)
+        const result = await sql.query(`SELECT * FROM TEMAS_USUARIOS`);
+
+        const temasProcesados = result.recordset.map(tema => {
+            let imagenBase64 = null;
+
+            if (tema.IMAGEN) {
+                // Si es un Buffer, conviértelo a base64
+                if (Buffer.isBuffer(tema.IMAGEN)) {
+                    imagenBase64 = tema.IMAGEN.toString('base64');
+                } else if (tema.IMAGEN.data) {
+                    // En caso de que venga con estructura { data: [...] }
+                    imagenBase64 = Buffer.from(tema.IMAGEN.data).toString('base64');
+                }
+            }
+
+            return {
+                id: tema.ID,
+                nombre: tema.NOMBRE,
+                descripcion: tema.DESCRIPCION,
+                imagen: imagenBase64,
+                mime_type: 'image/jpeg'  // Cambia si sabes el tipo real
+            };
+        });
+
+        res.status(200).json({
+            message: "Exito en la operacion GET.",
+            data: temasProcesados
+        });
+        console.log(`exito en la consulta Select`);
+    } catch (error) {
+        res.status(500).json({ message: `Ocurrio un error en el servidor al intentar hacer el GET de la información.` });
+        console.error(`Error en el Get, error ${error}`);
     }
-})
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

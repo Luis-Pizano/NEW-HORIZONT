@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from '../styles/add_tema.module.css';
 
 const File = () => {
@@ -8,6 +8,7 @@ const File = () => {
         file: "",
     });
 
+    const clear = useRef(null);
     const inputsave = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -18,7 +19,6 @@ const File = () => {
 
     const handleSave = async (e) => {
         e.preventDefault();
-
         const data_form = new FormData();
         data_form.append('nombre', formData.nombre);
         data_form.append('descripcion', formData.descripcion);
@@ -35,6 +35,17 @@ const File = () => {
 
             if (contentType && contentType.includes("application/json")) {
                 const data = await response.json();
+                setFormData({
+                    nombre: "",
+                    descripcion: "",
+                    file: "",
+                });
+
+                setPreviewUrl(null);
+                if (clear.current) {
+                    clear.current.value = null;
+                };
+
                 alert("Éxito en la operación.");
             } else {
                 console.warn("La respuesta no es JSON. Content-Type:", contentType);
@@ -80,10 +91,10 @@ const File = () => {
                     <form onSubmit={handleSave} className={styles.form}>
                         <h2>Subir elemento</h2>
                         <label htmlFor="#">Nombre del elemento</label>
-                        <input type="text" name="nombre" id="nombre" onChange={inputsave} required />
+                        <input type="text" name="nombre" id="nombre" onChange={inputsave} value={formData.nombre} required />
                         <label htmlFor="#">Descripcion del elemento</label>
-                        <textarea name="descripcion" id="descripcion" className={styles.descripcion} onChange={inputsave} placeholder="Añade una descripción" required></textarea>
-                        <input type="file" name="file" id="file" onChange={handleFileChange} required />
+                        <textarea name="descripcion" id="descripcion" className={styles.descripcion} onChange={inputsave} placeholder="Añade una descripción" value={formData.descripcion} required></textarea>
+                        <input type="file" name="file" id="file" onChange={handleFileChange} ref = {clear} required />
                         <button type="submit" onSubmit={handleSave} className={styles.submit}>Subir</button>
                         <div className={styles.previsualizar}>
                             <img src={previewUrl} alt="" width="250" />

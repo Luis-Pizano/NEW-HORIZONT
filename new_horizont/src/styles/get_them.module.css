@@ -17,6 +17,7 @@
     position: relative;
     margin-top: 25px;
     color: #fff;
+    text-shadow: 4px 2px 4px black;
 }
 
 .section_cards{
@@ -97,6 +98,22 @@
 .btn_redirect:hover{
     background-color: #245ebd;
     transition: 0.5 ease-in-out;
+}
+.btn_cargar{
+    color: #fff;
+    background: #28a745;
+    transition:  transform 0.5 ease-in-out;
+}
+
+.btn_cargar:hover{
+    background: #178538
+}
+
+.btn_cargar:focus,
+.btn_cargar:active,
+.btn_cargar:hover {
+    border: 2px solid transparent; 
+    outline: 2px solid transparent ;
 }
 
 @media (width <= 768px) {
