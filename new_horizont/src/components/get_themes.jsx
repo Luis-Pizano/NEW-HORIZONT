@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styles from "../styles/get_them.module.css";
+import { useNavigate } from "react-router-dom";
 
 const Get_them = () => {
     const [temas, setTemas] = useState([]);
+
+    const Navigate = useNavigate()
 
     const handleCard = async () => {
         try {
@@ -23,6 +26,10 @@ const Get_them = () => {
         } catch (error) {
             console.error("Error al cargar imágenes de temas:", error);
         }
+    };
+
+    const verDetalle = (id) => {
+        Navigate(`/tema/${id}`);
     };
 
     return (
@@ -46,7 +53,7 @@ const Get_them = () => {
                                     </div>
                                     <div className={styles.back}>
                                         <p>Presiona saber más para obtener información sobre esta imagen</p>
-                                        <button className={styles.btn_redirect}>Saber más</button>
+                                        <button className={styles.btn_redirect} onClick={ () => verDetalle(tema.id)}>Saber más</button>
                                     </div>
                                 </div>
                             </div>

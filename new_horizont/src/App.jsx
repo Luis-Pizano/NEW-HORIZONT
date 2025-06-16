@@ -6,6 +6,7 @@ import Login from "./components/login";
 import Register from "./components/register";
 import File from "./components/add_tema";
 import Get_them from "./components/get_themes"
+import Tema_detail from "./components/tema_detail"
 import PageNotFound from "./components/404";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/Registro" element={<Register />}></Route>
           <Route path="/Subir_elemento" element= {<File />}></Route>
           <Route path="/Temas" element= {<Get_them />}></Route>
+          <Route path="/Tema/:id" element= {<Tema_detail />}></Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

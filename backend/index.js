@@ -88,7 +88,7 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     }
 });
 
-app.get('/api/all_temas', async (req, res) => {
+app.get('/api/all_temas', async (req,res) => {
     try {
         await sql.connect(dbConfig);
 
@@ -112,7 +112,7 @@ app.get('/api/all_temas', async (req, res) => {
                 nombre: tema.NOMBRE,
                 descripcion: tema.DESCRIPCION,
                 imagen: imagenBase64,
-                mime_type: 'image/jpeg'  // Cambia si sabes el tipo real
+                mime_type: 'image/jpeg'
             };
         });
 
@@ -126,6 +126,45 @@ app.get('/api/all_temas', async (req, res) => {
         console.error(`Error en el Get, error ${error}`);
     }
 });
+
+app.get('/api/theme_detail/:id', async (req,res) =>{
+    const {id} = req.params; // params es una referencia en este caso
+    try{
+        await sql.connect(dbConfig);
+        const result = await sql.query(`SELECT * FROM TEMAS_USUARIOS WHERE ID = ${id}`);
+
+        if (result.recordset.length === 0){
+            res.status(404).json({message: 'No se encontro el tema.'})
+            console.error(`No se encontro el tema del id ${id}`)
+            return;
+        }
+
+        const temasProcesados = result.recordset.map(tema =>{
+           let imagenBase64  = null;
+
+           if(tema.IMAGEN){
+            if(Buffer.isBuffer(tema.IMAGEN)){
+                imagenBase64  = tema.IMAGEN.toString('base64');
+            } else if(tema.IMAGEN.data){
+                imagenBase64  = Buffer.from(tema.IMAGEN.data).toString('base64');
+            }
+           }
+           return{
+            id: tema.ID,
+            nombre: tema.NOMBRE,
+            descripcion:  tema.DESCRIPCION,
+            imagen: imagenBase64 ,
+            mime_type: 'image/jpeg'
+        }
+        })
+
+        res.status(200).json(temasProcesados[0]);
+
+    } catch(error){
+        res.status(500).json({message: `Ocurrio un error en el servidor al intentar traer el detalle del objeto ${id}`});
+        console.error(`Error en el select para detalle, Error: ${error}`);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
