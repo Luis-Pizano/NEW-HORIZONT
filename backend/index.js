@@ -59,7 +59,7 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-
+//Agregar temas
 app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     const { nombre, descripcion } = req.body;
     const uploadFile = req.file ? req.file.buffer : null;  // El contenido binario del archivo
@@ -88,6 +88,7 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     }
 });
 
+//Listado de todos los temas
 app.get('/api/all_temas', async (req,res) => {
     try {
         await sql.connect(dbConfig);
@@ -127,6 +128,7 @@ app.get('/api/all_temas', async (req,res) => {
     }
 });
 
+// Detalle de temas
 app.get('/api/theme_detail/:id', async (req,res) =>{
     const {id} = req.params; // params es una referencia en este caso
     try{
@@ -165,6 +167,33 @@ app.get('/api/theme_detail/:id', async (req,res) =>{
         console.error(`Error en el select para detalle, Error: ${error}`);
     }
 })
+
+//Edicion de temas subidos por los usuarios (Solo los administradores pueden editar)
+app.put('/api/editar_tema/:id', upload.single('file'), async (req, res) => {
+    const { nombre, descripcion } = req.body;
+    const { id } = req.params;
+    const uploadFile = req.file ? req.file.buffer : null;
+
+    try {
+        await sql.connect(dbConfig);
+
+        const request = new sql.Request();
+        request.input('id', sql.Int, id);
+        request.input('nombre', sql.VarChar(255), nombre);
+        request.input('descripcion', sql.VarChar(sql.MAX), descripcion);
+        request.input('imagen', sql.VarBinary(sql.MAX), uploadFile);
+
+        // Updater por referenciass y no directamente la variable, evita inyecciones SQL
+        await request.query(`
+            UPDATE TEMAS_USUARIOS SET NOMBRE = @nombre, DESCRIPCION = @descripcion, 
+            IMAGEN = @imagen WHERE ID = @id`);
+
+        res.status(200).json({ message: 'Éxito en update' });
+    } catch (error) {
+        console.error(`Error en la actualización de datos: ${error}`);
+        res.status(500).json({ error: 'Error al actualizar el tema' });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

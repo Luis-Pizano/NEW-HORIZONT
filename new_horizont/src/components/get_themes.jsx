@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 const Get_them = () => {
     const [temas, setTemas] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const Navigate = useNavigate()
 
     const handleCard = async () => {
+        setLoading(true)
         try {
             const response = await fetch("http://localhost:8080/api/all_temas");
             const result = await response.json();
@@ -25,12 +27,26 @@ const Get_them = () => {
             }
         } catch (error) {
             console.error("Error al cargar imágenes de temas:", error);
+        }finally{
+            setLoading(false)
         }
     };
 
     const verDetalle = (id) => {
         Navigate(`/tema/${id}`);
     };
+    const update = (id) => {
+        Navigate(`/Actualizar-tema/${id}`)
+    }
+
+    if (loading == true) {
+        return(
+            <p className={styles.loading}>
+                Cargando<span className={styles.dot1}>.</span>
+                <span className={styles.dot2}>.</span><span className={styles.dot3}>.</span>
+            </p>
+        )
+    }
 
     return (
         <div className={styles.fondo}>
@@ -52,6 +68,9 @@ const Get_them = () => {
                                         <h2>{tema.nombre}</h2>
                                     </div>
                                     <div className={styles.back}>
+                                        <button onClick={() => update(tema.id)}>
+                                            <i className="fa-solid fa-file-pen"></i>
+                                        </button>
                                         <p>Presiona saber más para obtener información sobre esta imagen</p>
                                         <button className={styles.btn_redirect} onClick={ () => verDetalle(tema.id)}>Saber más</button>
                                     </div>

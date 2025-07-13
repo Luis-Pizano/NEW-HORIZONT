@@ -7,6 +7,7 @@ import Register from "./components/register";
 import File from "./components/add_tema";
 import Get_them from "./components/get_themes"
 import Tema_detail from "./components/tema_detail"
+import UpdatefromTema from "./components/update_tema"
 import PageNotFound from "./components/404";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/Subir_elemento" element= {<File />}></Route>
           <Route path="/Temas" element= {<Get_them />}></Route>
           <Route path="/Tema/:id" element= {<Tema_detail />}></Route>
+          <Route path="/Actualizar-tema/:id" element= {<UpdatefromTema />}></Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

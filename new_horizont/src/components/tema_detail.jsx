@@ -42,7 +42,10 @@ const Tema_detail = () => {
 
     if (tema == null) {
         return (
-            <p>cargando ...</p>
+            <p className={styles.loading}>
+                Cargando<span className={styles.dot1}>.</span>
+                <span className={styles.dot2}>.</span><span className={styles.dot3}>.</span>
+            </p>
         )
     }
 
