@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import styles from "../styles/register.module.css";
 import { Navigate, useNavigate } from "react-router-dom";
+import Notification_Success from "./Notification_Success";
+import Notification_Error from "./Notification_Error";
 const Register = () => {
+    const [notification, setNotification] = useState(null); // success | error
+
     // Estado local para almacenar los datos del formulario
     const [phoneError, setPhoneError] = useState("");
     const [formData, setFormData] = useState({
@@ -14,7 +18,7 @@ const Register = () => {
     });
 
     // Hook de navegación para redirigir al usuario después del registro
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
 
     // Maneja los cambios en los inputs del formulario y actualiza el estado formData
     const handleChange = (e) => {
@@ -36,7 +40,7 @@ const Register = () => {
     // Función que se ejecuta al enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
-    
+
         try {
             // Se realiza una solicitud POST a la API de registro con los datos del formulario
             const response = await fetch("http://localhost:8080/api/register", {
@@ -46,18 +50,18 @@ const Register = () => {
                 },
                 body: JSON.stringify(formData) // Convierte el objeto formData en JSON
             });
-    
+
             // Se espera la respuesta de la API y se convierte a JSON
             const data = await response.json();
             console.log("Respuesta de la API:", data); // Verifica lo que llega
-    
+
             // Si la respuesta fue exitosa, se muestra un mensaje y se redirige al login
             if (response.ok) {
-                alert("Registro exitoso");
-                Navigate("/Login");
+                setNotification("success"); // Muestra notificación de éxito
+                setTimeout(() => navigate("/Login"), 3000); // Redirige después de 4s
             } else {
-                // Si hubo un error, se muestra el mensaje de error recibido desde el backend
-                alert("Error en el registro: " + (data.error || 'Error desconocido'));
+                setNotification("error"); // Muestra notificación de error
+                setTimeout(() => {window.location.reload()}, 3000);
             }
         } catch (error) {
             // Manejo de errores de red u otros problemas
@@ -65,15 +69,33 @@ const Register = () => {
             alert("Ocurrió un error al enviar el formulario.");
         }
     };
-    
+
     // A partir de aquí se retorna el formulario que ve el usuario
 
+    // const testing = () => {
+    //     setNotification("success");
+    //     setNotification("error");
+    //     setTimeout(() => window.location.reload(), 3000);
+    // }
 
     return (
+
         <div className={styles.fondo}>
+
+            {/* Notificaciones */}
+            {notification === "success" && (
+                <Notification_Success />
+            )}
+            {/* Notificaciones */}
+            {notification === "error" && (
+                <Notification_Error />
+            )}
+
             <div className={styles.container}>
                 <div className={styles.contenido}>
                     <h2>Registro</h2>
+                    {/* <button onClick={testing}>testing</button> */}
+
                     <form onSubmit={handleSubmit}>
                         <div className={styles.formGroup}>
                             <label htmlFor="name">Nombre/s</label>
