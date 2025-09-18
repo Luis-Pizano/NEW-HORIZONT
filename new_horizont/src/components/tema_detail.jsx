@@ -31,14 +31,14 @@ const Tema_detail = () => {
     useEffect(() => { Methodget(); }, [id]);
 
     useEffect(() => {
-    if (temaActual === "claro") {
-        document.body.style.background = "#f5f5f5";
-        document.body.style.color = "black"; // Letras negras
-    } else {
-        document.body.style.background = "#121212";
-        document.body.style.color = "white"; // Letras blancas
-    }
-}, [temaActual]);
+        if (temaActual === "claro") {
+            document.body.style.background = "#f5f5f5";
+            document.body.style.color = "black"; // Letras negras
+        } else {
+            document.body.style.background = "#121212";
+            document.body.style.color = "white"; // Letras blancas
+        }
+    }, [temaActual]);
 
     if (tema == null) {
         return (
@@ -53,14 +53,14 @@ const Tema_detail = () => {
         <>
             <div className={styles.image_container}>
                 <div className={styles.temas}>
-                <label htmlFor="tema-claro" style={{ color: temaActual === "claro" ? "black" : "white" }}>Tema Claro</label>
-                <input type="radio" name="tema" id="tema-claro" value="claro"
-                 checked={temaActual === "claro"} onChange={() => setTemaActual("claro")}/>
+                    <label htmlFor="tema-claro" style={{ color: temaActual === "claro" ? "black" : "white" }}>Tema Claro</label>
+                    <input type="radio" name="tema" id="tema-claro" value="claro"
+                        checked={temaActual === "claro"} onChange={() => setTemaActual("claro")} />
 
-                <label htmlFor="tema-oscuro" style={{ color: temaActual === "claro" ? "black" : "white" }}>Tema Oscuro</label>
-                <input type="radio" name="tema" id="tema-oscuro" value="oscuro"
-                 checked={temaActual === "oscuro"} onChange={() => setTemaActual("oscuro")}/>
-            </div>
+                    <label htmlFor="tema-oscuro" style={{ color: temaActual === "claro" ? "black" : "white" }}>Tema Oscuro</label>
+                    <input type="radio" name="tema" id="tema-oscuro" value="oscuro"
+                        checked={temaActual === "oscuro"} onChange={() => setTemaActual("oscuro")} />
+                </div>
                 <img src={`data:${tema.mime_type};Base64,${tema.imagen}`} alt={tema.nombre} />
             </div>
 
@@ -73,7 +73,7 @@ const Tema_detail = () => {
                 </div>
             </section>
 
-            
+
         </>
     );
 };

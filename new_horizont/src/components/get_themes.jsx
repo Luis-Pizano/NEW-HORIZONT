@@ -14,10 +14,10 @@ const Get_them = () => {
             const response = await fetch("http://localhost:8080/api/all_temas");
             const result = await response.json();
 
-            if (result.data && Array.isArray(result.data)) {
-                const temasImagen = result.data.map(tema => ({
+            if (Array.isArray(result)) {
+                const temasImagen = result.map(tema => ({
                     ...tema,
-                     imagen: tema.imagen ? tema.imagen : null
+                    imagen: tema.imagen ? tema.imagen : null
                 }));
                 console.log("✅ Datos recibidos del backend:", temasImagen);
 
@@ -27,7 +27,7 @@ const Get_them = () => {
             }
         } catch (error) {
             console.error("Error al cargar imágenes de temas:", error);
-        }finally{
+        } finally {
             setLoading(false)
         }
     };
@@ -40,7 +40,7 @@ const Get_them = () => {
     }
 
     if (loading == true) {
-        return(
+        return (
             <p className={styles.loading}>
                 Cargando<span className={styles.dot1}>.</span>
                 <span className={styles.dot2}>.</span><span className={styles.dot3}>.</span>
@@ -62,8 +62,11 @@ const Get_them = () => {
                             <div key={index} className={styles.cardContainer}>
                                 <div className={styles.card}>
                                     <div className={styles.front}>
-                                        {tema.imagen && (
-                                            <img src={`data:${tema.mime_type};base64,${tema.imagen}`} alt={`Imagen de ${tema.nombre}`} />
+                                        {tema.imagen && tema.mime_type ? (
+                                            <img src={`data:${tema.mime_type};base64,${tema.imagen}`} alt={tema.nombre} />
+
+                                        ):(
+                                            <p>Sin imagen</p>
                                         )}
                                         <h2>{tema.nombre}</h2>
                                     </div>
@@ -72,7 +75,7 @@ const Get_them = () => {
                                             <i className="fa-solid fa-file-pen"></i>
                                         </button>
                                         <p>Presiona saber más para obtener información sobre esta imagen</p>
-                                        <button className={styles.btn_redirect} onClick={ () => verDetalle(tema.id)}>Saber más</button>
+                                        <button className={styles.btn_redirect} onClick={() => verDetalle(tema.id)}>Saber más</button>
                                     </div>
                                 </div>
                             </div>

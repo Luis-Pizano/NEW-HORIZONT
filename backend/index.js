@@ -1,24 +1,20 @@
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
-const bcrypt = require('bcrypt'); // Importar bcrypt
-const multer = require('multer'); // Permite la que se guarde correctamente imagenes y videos
-const path = require('path');
-
-// Configuración de Multer para almacenar los archivos en memoria
-const storage = multer.memoryStorage();
-
-// Inicialización de Multer con la configuración de almacenamiento en memoria
-const upload = multer({ storage: storage });
-
-
+const multer = require('multer');
 const app = express();
+
 const PORT = 8080;
 
+// Configuración de Multer (archivos en memoria)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// Configuración de CORS
 app.use(cors({
-    origin: 'http://localhost:3000',  // o la URL de tu frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: 'http://localhost:3000',
+    methods: ['GET','POST','PUT','DELETE'],
+    allowedHeaders: ['Content-Type','Authorization']
 }));
 app.use(express.json());
 
@@ -34,139 +30,95 @@ const dbConfig = {
     }
 };
 
-// Ruta para registrar usuarios
-app.post('/api/register', async (req, res) => {
-    const { name, last_name_father, last_name_Mother, phone_number, email, password } = req.body; // Accede a los name de los input
-
-    try {
-        // Encriptar la contraseña
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 es el número de rondas de sal
-        const admin = 0
-
-        // Conectar a la base de datos
-        await sql.connect(dbConfig);
-
-        // Ejecutar la inserción con la contraseña encriptada
-        await sql.query`
-            INSERT INTO CUENTAS (nombre, apellido_paterno, apellido_materno, telefono, correo, contraseña,visitante,administrador)
-            VALUES (${name}, ${last_name_father}, ${last_name_Mother}, ${phone_number}, ${email}, ${hashedPassword},1,${admin})
-        `;
-
-        res.status(200).json({ message: 'Registro exitoso con contraseña encriptada' });
-    } catch (error) {
-        console.error('Error en el registro:', error);
-        res.status(500).json({ error: 'Hubo un error al registrar el usuario' });
-    }
-});
-
-//Agregar temas
+// Agregar tema
 app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     const { nombre, descripcion } = req.body;
-    const uploadFile = req.file ? req.file.buffer : null;  // El contenido binario del archivo
+    const fileBuffer = req.file ? req.file.buffer : null;
+    const mimeType = req.file ? req.file.mimetype : null;
 
     try {
-        // Conectar a la base de datos
+        // Conectar la Base de datos
         await sql.connect(dbConfig);
-
-        // Preparar la consulta SQL con parámetros para prevenir inyección SQL
+    // Preparar consulta para evitar inyecciones sql
         const request = new sql.Request();
-        request.input('nombre', sql.VarChar(255), nombre.toUpperCase());
-        request.input('descripcion', sql.VarChar(sql.MAX), descripcion);
-        request.input('imagen', sql.VarBinary(sql.MAX), uploadFile);  // Almacenar el archivo binario
+        request.input('nombre', sql.NVarChar(255), nombre);
+        request.input('descripcion', sql.NVarChar(sql.MAX), descripcion);
+        request.input('imagen', sql.VarBinary(sql.MAX), fileBuffer);
+        request.input('mime_type', sql.NVarChar(50), mimeType);
 
-        // Ejecutar la inserción de los datos en la tabla
         await request.query(`
-            INSERT INTO TEMAS_USUARIOS (nombre, descripcion, imagen)
-            VALUES (@nombre, @descripcion, @imagen)
+            INSERT INTO TEMAS_USUARIOS (NOMBRE, DESCRIPCION, IMAGEN, MIME_TYPE)
+            VALUES (@nombre, @descripcion, @imagen, @mime_type)
         `);
 
-        res.status(200).json({ message: 'Éxito al ingresar valores' });
-
-    } catch (error) {
-        console.error(`Ocurrió un error al intentar subir el contenido, error: ${error}`);
-        res.status(500).json({ message: 'Ocurrió un error al intentar insertar los registros.' });
+        res.status(200).json({ message: 'Tema agregado correctamente' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error al agregar tema' });
     }
 });
 
-//Listado de todos los temas
-app.get('/api/all_temas', async (req,res) => {
+// Listar todos los temas
+app.get('/api/all_temas', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
+        const result = await sql.query(`SELECT ID, NOMBRE, DESCRIPCION, IMAGEN, MIME_TYPE FROM TEMAS_USUARIOS`);
+
+        const temas = result.recordset.map(t => ({
+            id: t.ID,
+            nombre: t.NOMBRE,
+            descripcion: t.DESCRIPCION,
+            imagen: t.IMAGEN ? t.IMAGEN.toString('base64') : null,
+            mime_type: t.MIME_TYPE || 'image/jpeg'
+        }));
+
+        res.status(200).json(temas);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error al obtener temas' });
+    }
+});
+
+// Detalle de tema
+app.get('/api/theme_detail/:id', async (req, res) => {
+    const { id } = req.params;
+
     try {
         await sql.connect(dbConfig);
 
-        const result = await sql.query(`SELECT * FROM TEMAS_USUARIOS`);
+        const request = new sql.Request();
+        request.input('id', sql.Int, id);
 
-        const temasProcesados = result.recordset.map(tema => {
-            let imagenBase64 = null;
+        const result = await request.query(`SELECT * FROM TEMAS_USUARIOS WHERE ID = @id`);
 
-            if (tema.IMAGEN) {
-                // Si es un Buffer, conviértelo a base64
-                if (Buffer.isBuffer(tema.IMAGEN)) {
-                    imagenBase64 = tema.IMAGEN.toString('base64');
-                } else if (tema.IMAGEN.data) {
-                    // En caso de que venga con estructura { data: [...] }
-                    imagenBase64 = Buffer.from(tema.IMAGEN.data).toString('base64');
-                }
-            }
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ message: 'No se encontró el tema.' });
+        }
 
-            return {
-                id: tema.ID,
-                nombre: tema.NOMBRE,
-                descripcion: tema.DESCRIPCION,
-                imagen: imagenBase64,
-                mime_type: 'image/jpeg'
-            };
-        });
+        const tema = result.recordset[0];
+
+        // Convertir la imagen a Base64 solo si existe
+        let imagenBase64 = null;
+        if (tema.IMAGEN) {
+            imagenBase64 = Buffer.isBuffer(tema.IMAGEN)
+                ? tema.IMAGEN.toString('base64')
+                : Buffer.from(tema.IMAGEN).toString('base64');
+        }
 
         res.status(200).json({
-            message: "Exito en la operacion GET.",
-            data: temasProcesados
+            id: tema.ID,
+            nombre: tema.NOMBRE,
+            descripcion: tema.DESCRIPCION,
+            imagen: imagenBase64,
+            mime_type: tema.MIME_TYPE || 'image/jpeg'
         });
-        console.log(`exito en la consulta Select`);
+
     } catch (error) {
-        res.status(500).json({ message: `Ocurrio un error en el servidor al intentar hacer el GET de la información.` });
-        console.error(`Error en el Get, error ${error}`);
+        console.error(`Error al obtener el detalle del tema ${id}:`, error);
+        res.status(500).json({ message: 'Ocurrió un error en el servidor.' });
     }
 });
 
-// Detalle de temas
-app.get('/api/theme_detail/:id', async (req,res) =>{
-    const {id} = req.params; // params es una referencia en este caso
-    try{
-        await sql.connect(dbConfig);
-        const result = await sql.query(`SELECT * FROM TEMAS_USUARIOS WHERE ID = ${id}`);
-
-        if (result.recordset.length === 0){
-            res.status(404).json({message: 'No se encontro el tema.'})
-            console.error(`No se encontro el tema del id ${id}`)
-            return;
-        }
-
-        const temasProcesados = result.recordset.map(tema =>{
-           let imagenBase64  = null;
-
-           if(tema.IMAGEN){
-            if(Buffer.isBuffer(tema.IMAGEN)){
-                imagenBase64  = tema.IMAGEN.toString('base64');
-            } else if(tema.IMAGEN.data){
-                imagenBase64  = Buffer.from(tema.IMAGEN.data).toString('base64');
-            }
-           }
-           return{
-            id: tema.ID,
-            nombre: tema.NOMBRE,
-            descripcion:  tema.DESCRIPCION,
-            imagen: imagenBase64 ,
-            mime_type: 'image/jpeg'
-        }
-        })
-
-        res.status(200).json(temasProcesados[0]);
-
-    } catch(error){
-        res.status(500).json({message: `Ocurrio un error en el servidor al intentar traer el detalle del objeto ${id}`});
-        console.error(`Error en el select para detalle, Error: ${error}`);
-    }
-})
 
 //Edicion de temas subidos por los usuarios (Solo los administradores pueden editar)
 app.put('/api/editar_tema/:id', upload.single('file'), async (req, res) => {
