@@ -106,3 +106,30 @@ ul li {
     cursor: pointer;
 }
 
+.dropdown {
+    position: relative;
+}
+
+.dropdown button{
+    background: none;
+    color: #fff;
+}
+
+
+.dropdown ul{
+    display: block;
+}
+
+.dropdown ul li{
+    background: rgb(225, 220, 220);
+    color: black;
+    padding-bottom: 0.5rem;
+}
+
+.dropdown ul li .link{
+    color: black !important;
+}
+
+.dropdown .link::before {
+    background: black;
+}
