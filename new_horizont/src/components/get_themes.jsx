@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "../styles/get_them.module.css";
+import "../styles/loading.css";
 import { useNavigate } from "react-router-dom";
 
 const Get_them = () => {
@@ -40,13 +41,13 @@ const Get_them = () => {
     }
 
     if (loading == true) {
-        return (
-            <p className={styles.loading}>
-                Cargando<span className={styles.dot1}>.</span>
-                <span className={styles.dot2}>.</span><span className={styles.dot3}>.</span>
-            </p>
-        )
-    }
+            return (
+                <p className="loading">
+                    Cargando<span className="dot1">.</span>
+                    <span className="dot2">.</span><span className="dot3">.</span>
+                </p>
+            )
+        }
 
     return (
         <div className={styles.fondo}>

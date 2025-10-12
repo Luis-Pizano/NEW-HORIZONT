@@ -95,10 +95,11 @@ const File = () => {
                         <label htmlFor="#">Descripcion del elemento</label>
                         <textarea name="descripcion" id="descripcion" className={styles.descripcion} onChange={inputsave} placeholder="Añade una descripción" value={formData.descripcion} required></textarea>
                         <input type="file" name="file" id="file" onChange={handleFileChange} ref = {clear} required />
-                        <button type="submit" onSubmit={handleSave} className={styles.submit}>Subir</button>
                         <div className={styles.previsualizar}>
                             <img src={previewUrl} alt="" width="250" />
                         </div>
+                        <button type="submit" onSubmit={handleSave} className={styles.submit}>Subir</button>
+                        
                     </form>
                 </div>
             </div>

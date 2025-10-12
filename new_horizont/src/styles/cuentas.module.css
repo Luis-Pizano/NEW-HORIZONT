@@ -1,0 +1,49 @@
+.fondo {
+  position: fixed;
+  width: 100%;
+  inset: 0;
+  background-color: #f4f6f8;
+  /* gris muy claro, casi blanco */
+  color: #212529;
+  /* texto gris oscuro */
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.titulo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 30vh;
+  font-size: 2rem;
+  color: #222;
+  text-align: center;
+}
+
+.list_cuentas {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 60px;
+}
+
+.table,
+th,
+td {
+  font-family: 'Calibri';
+  color: black;
+  border: solid 2px black;
+  border-collapse: collapse;
+  padding: 12px;
+}
+
+.table th {
+  background: #2563eb;
+  color: white;
+}
+
+.table tr:nth-child(even) {
+  background: #d1d0d0;
+}

@@ -61,7 +61,7 @@ const Register = () => {
                 setTimeout(() => navigate("/Login"), 3000); // Redirige después de 4s
             } else {
                 setNotification("error"); // Muestra notificación de error
-                setTimeout(() => {window.location.reload()}, 3000);
+                setTimeout(() => {window.location.reload()}, 30000);
             }
         } catch (error) {
             // Manejo de errores de red u otros problemas

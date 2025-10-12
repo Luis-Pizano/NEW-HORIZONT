@@ -2,6 +2,8 @@ const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
+
 const app = express();
 
 const PORT = 8080;
@@ -13,8 +15,8 @@ const upload = multer({ storage });
 // Configuración de CORS
 app.use(cors({
     origin: 'http://localhost:3000',
-    methods: ['GET','POST','PUT','DELETE'],
-    allowedHeaders: ['Content-Type','Authorization']
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
@@ -30,6 +32,48 @@ const dbConfig = {
     }
 };
 
+// Registro de usuario
+app.post('/api/register', async (req, res) => {
+    const { name, last_name_father, last_name_Mother, phone_number, email, password } = req.body;
+
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Preparar la consulta
+        request.input("name", sql.NVarChar(255), name);
+        request.input("last_name_father", sql.NVarChar(255), last_name_father);
+        request.input("last_name_Mother", sql.NVarChar(255), last_name_Mother || null);
+        request.input("phone_number", sql.NVarChar(50), phone_number);
+        request.input("email", sql.NVarChar(255), email);
+        request.input("password", sql.NVarChar(255), hashedPassword);
+
+        await request.query(`
+            INSERT INTO CUENTAS 
+            (NOMBRE, APELLIDO_PATERNO, APELLIDO_MATERNO, TELEFONO, CORREO, [CONTRASEÑA], VISITANTE)
+            VALUES 
+            (@name, @last_name_father, @last_name_Mother, @phone_number, @email, @password, 1)
+        `);
+
+        res.status(201).json({ message: "Registro exitoso", success: true });
+
+    } catch (error) {
+        console.error("Error en /api/register:", error);
+
+        // Manejar email duplicado
+        if (error.number === 2627) {
+            return res.status(400).json({ message: "El correo ya está registrado" });
+        }
+
+        res.status(500).json({ message: "Error al registrar usuario", error });
+    }
+});
+
+
+
 // Agregar tema
 app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     const { nombre, descripcion } = req.body;
@@ -39,7 +83,7 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
     try {
         // Conectar la Base de datos
         await sql.connect(dbConfig);
-    // Preparar consulta para evitar inyecciones sql
+        // Preparar consulta para evitar inyecciones sql
         const request = new sql.Request();
         request.input('nombre', sql.NVarChar(255), nombre);
         request.input('descripcion', sql.NVarChar(sql.MAX), descripcion);
@@ -146,6 +190,74 @@ app.put('/api/editar_tema/:id', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar el tema' });
     }
 });
+
+// Search para bsuqueda de tema mediante parametro nombre
+app.get('/api/search', async (req, res) => {
+    const { search } = req.query;
+
+    if (!search) {
+        return res.status(400).json({ message: "Debe enviar el parámetro 'search'" });
+    }
+
+    try {
+        await sql.connect(dbConfig);
+        console.log("Conexion para Search.")
+
+        const request = new sql.Request();
+
+        // 🔑 Le pasamos el parámetro con % para hacer búsqueda parcial
+        request.input("nombre", sql.NVarChar, `%${search}%`);
+
+        // 🔑 Usamos LIKE para coincidencias parciales
+        const result = await request.query(
+            "SELECT * FROM TEMAS_USUARIOS WHERE NOMBRE COLLATE SQL_Latin1_General_CP1_CI_AI LIKE @nombre"
+        );
+
+
+        const temas = result.recordset.map(t => ({
+            id: t.ID,
+            nombre: t.NOMBRE,
+            descripcion: t.DESCRIPCION,
+            imagen: t.IMAGEN ? t.IMAGEN.toString('base64') : null,
+            mime_type: t.MIME_TYPE || 'image/jpeg'
+
+        }));
+
+        res.status(200).json({
+            message: "Éxito en búsqueda",
+            success: true,
+            data: temas
+        });
+
+    } catch (error) {
+        console.error("Error en search:", error);
+        res.status(500).json({ message: "Error en search", error });
+    }
+});
+
+// Listado de cuentas 
+app.get('/api/cuentas', async (req, res) => {
+    try {
+        const connect = await sql.connect(dbConfig)
+
+        const result = await connect.query('SELECT * FROM CUENTAS')
+        const cuentas = result.recordset.map(user => ({
+            nombre: user.NOMBRE,
+            apellido_paterno: user.APELLIDO_PATERNO,
+            apellido_materno: user.APELLIDO_MATERNO,
+            telefono: user.TELEFONO,
+            correo: user.CORREO,
+            visitante: user.VISITANTE,
+            administrador: user.ADMINISTRADOR,
+            fecha_creacion: user.FECHA_CREACION,
+        }));
+        res.status(200).json(cuentas)
+
+    } catch (error) {
+        res.status(500).json({ message: `Administrador, Hubo un error en el listado de cuentas, Codigo de error: ${error}` })
+    }
+})
+
 
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

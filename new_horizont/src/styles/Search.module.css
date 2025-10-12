@@ -1,13 +1,3 @@
-/* get_them.module.css */
-.fondo {
-    position: fixed;
-    width: 100%;
-    inset: 0;
-    background-color: grey;
-    min-height: 100vh;
-    overflow-y: auto;
-}
-
 .container {
     position: relative;
     padding: 2rem;
