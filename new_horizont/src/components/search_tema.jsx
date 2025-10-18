@@ -48,6 +48,12 @@ const Search = () => {
         }
     }
 
+
+
+    React.useEffect(() => {
+        handleSearch();
+    }, [q]); // <-- Ejecuta la búsqueda cada vez que cambia el parámetro q
+
     if (loading) {
         return (
             <p className="loading">
@@ -56,10 +62,6 @@ const Search = () => {
             </p>
         )
     }
-
-    React.useEffect(() => {
-        handleSearch();
-    }, [q]); // <-- Ejecuta la búsqueda cada vez que cambia el parámetro q
 
 
     return (
