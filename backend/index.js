@@ -13,11 +13,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Configuración de CORS
-app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.use(express.json());
 
 // Configuración de SQL Server
@@ -205,10 +201,10 @@ app.get('/api/search', async (req, res) => {
 
         const request = new sql.Request();
 
-        // 🔑 Le pasamos el parámetro con % para hacer búsqueda parcial
+        // Le pasamos el parámetro con % para hacer búsqueda parcial
         request.input("nombre", sql.NVarChar, `%${search}%`);
 
-        // 🔑 Usamos LIKE para coincidencias parciales
+        // Usamos LIKE para coincidencias parciales
         const result = await request.query(
             "SELECT * FROM TEMAS_USUARIOS WHERE NOMBRE COLLATE SQL_Latin1_General_CP1_CI_AI LIKE @nombre"
         );

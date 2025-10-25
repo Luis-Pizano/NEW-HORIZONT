@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000, // Solo si puedes usar puerto 80
+    port: 3000,
     host: true, // Permite usar direcciones como new-horizont.com
     //allowedHosts: ['new-horizont.com'],
   },

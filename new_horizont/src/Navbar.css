@@ -83,10 +83,15 @@ ul li {
 
 /* FINAL EFECTO BARRA*/
 
+/* Estilos del search*/
+.buscador-form{
+    position: relative;
+}
+
 .buscador {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 30vh;
     transform: translate(-50%, -50%);
 }
 
@@ -122,7 +127,68 @@ ul li {
     top: 0.5rem;
     cursor: pointer;
 }
+/* Contenedor del dropdown */
+.search-preview {
+  position: absolute;
+  top: 100%;
+  left: 10vh;
+  width: 280px;
+  background: #1b1b1b;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-top: 5px;
+  z-index: 1000;
+  max-height: 350px;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
 
+/* Cada item */
+.preview-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.preview-item:hover {
+  background: #2c2c2c;
+}
+
+.preview-item img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.no-image {
+  width: 45px;
+  height: 45px;
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.ver-todos {
+  padding: 10px;
+  text-align: center;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.ver-todos:hover {
+  color: white;
+  background: #2c2c2c;
+}
+
+/* Fin de estilos del search*/
 .dropdown {
     position: relative;
 }
@@ -185,3 +251,4 @@ ul li {
 .dropdown .link::before {
     background: black;
 }
+
