@@ -132,6 +132,27 @@
     transform: scale(1.6);
 }
 
+.pagination{
+    position: relative;
+    margin-top: 20vh;
+}
+
+.pagination button{
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #3b82f6;
+    color: #fff;
+    transition: 0.3s ease-in-out;
+}
+.pagination button:hover{
+
+    background-color: #2669d4;
+    
+}
+
+.pagination span{
+    color: #fff;
+}
 
 @media (width <= 768px) {
     .section_cards{

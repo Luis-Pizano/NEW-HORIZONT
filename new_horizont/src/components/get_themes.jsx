@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 const Get_them = () => {
     const [temas, setTemas] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const temasPorPagina  = 8;
 
     const Navigate = useNavigate()
 
@@ -41,13 +43,35 @@ const Get_them = () => {
     }
 
     if (loading == true) {
-            return (
-                <p className="loading">
-                    Cargando<span className="dot1">.</span>
-                    <span className="dot2">.</span><span className="dot3">.</span>
-                </p>
-            )
+        return (
+            <p className="loading">
+                Cargando<span className="dot1">.</span>
+                <span className="dot2">.</span><span className="dot3">.</span>
+            </p>
+        )
+    }
+
+    // Calcular los temas visibles en la página actual
+    const startIndex = (currentPage - 1) * temasPorPagina;
+    const endIndex = startIndex + temasPorPagina;
+    const temasVisibles = temas.slice(startIndex, endIndex);
+
+    // Calcular cuántas páginas hay
+    const totalPages = Math.ceil(temas.length / temasPorPagina);
+
+    // Funciones de paginación
+    const siguientePagina = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
         }
+    };
+
+    const anteriorPagina = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
 
     return (
         <div className={styles.fondo}>
@@ -59,14 +83,14 @@ const Get_them = () => {
                     </button>
 
                     <section className={styles.section_cards}>
-                        {temas.map((tema, index) => (
+                        {temasVisibles.map((tema, index) => (
                             <div key={index} className={styles.cardContainer}>
                                 <div className={styles.card}>
                                     <div className={styles.front}>
                                         {tema.imagen && tema.mime_type ? (
                                             <img src={`data:${tema.mime_type};base64,${tema.imagen}`} alt={tema.nombre} />
 
-                                        ):(
+                                        ) : (
                                             <p>Sin imagen</p>
                                         )}
                                         <h2>{tema.nombre}</h2>
@@ -82,6 +106,20 @@ const Get_them = () => {
                             </div>
                         ))}
                     </section>
+                    {/* Controles de paginación */}
+                    {temas.length > 0 && (
+                        <div className={styles.pagination}>
+                            <button onClick={anteriorPagina} disabled={currentPage === 1} className={styles.pageButton}>
+                                <i class="fa-solid fa-arrow-left"></i> Anterior
+                            </button>
+
+                            <span>Página {currentPage} de {totalPages}</span>
+
+                            <button onClick={siguientePagina} disabled={currentPage === totalPages} className={styles.pageButton}>
+                                Siguiente <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
