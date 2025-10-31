@@ -9,6 +9,8 @@ const Search = () => {
     const { q } = useParams();
     const [loading, setLoading] = useState(false);
     const [temas, setTemas] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const TemasPorPagina = 16;
 
     const navigate = useNavigate();
 
@@ -48,9 +50,27 @@ const Search = () => {
         }
     }
 
+    const startIndex = (currentPage - 1) * TemasPorPagina;
+    const endIndex = startIndex + TemasPorPagina;
+    const TemasVisibles = temas.slice(startIndex, endIndex);
 
+    const totalPages = Math.ceil(temas.length / TemasPorPagina)
+
+    const siguientePagina = () =>{
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1)
+            
+        }
+    }
+
+    const anteriorPagina = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
     React.useEffect(() => {
+        setCurrentPage(1)
         handleSearch();
     }, [q]); // <-- Ejecuta la búsqueda cada vez que cambia el parámetro q
 
@@ -74,7 +94,7 @@ const Search = () => {
 
                     <section className={styles.section_cards}>
                         {temas.length > 0 ? (
-                            temas.map((tema, index) => (
+                            TemasVisibles.map((tema, index) => (
                                 <div key={index} className={styles.cardContainer}>
                                     <div className={styles.card}>
                                         <div className={styles.front}>
@@ -99,7 +119,19 @@ const Search = () => {
                             <p>No se encontraron resultados para "{q}"</p>
                         )}
                     </section>
+                    {temas.length > 0 && (
+                        <div className={styles.pagination}>
+                            <button onClick={anteriorPagina} disabled={currentPage === 1} className={styles.pageButton}>
+                                <i class="fa-solid fa-arrow-left"></i> Anterior
+                            </button>
 
+                            <span>Página {currentPage} de {totalPages}</span>
+
+                            <button onClick={siguientePagina} disabled={currentPage === totalPages} className={styles.pageButton}>
+                                Siguiente <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
