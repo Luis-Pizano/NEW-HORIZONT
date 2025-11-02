@@ -1,9 +1,12 @@
-const express = require('express');
-const sql = require('mssql');
-const cors = require('cors');
-const multer = require('multer');
-const bcrypt = require('bcrypt');
+import express from 'express';
+import sql from 'mssql';
+import cors from 'cors';
+import multer from 'multer';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 
 const PORT = 8080;
@@ -254,6 +257,50 @@ app.get('/api/cuentas', async (req, res) => {
     }
 })
 
+//API para login
+app.post('/api/login', async (req, res) => {
+    const { password, email } = req.body;
+    try {
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Debe ingresar un correo y contraseña." });
+        }
+
+        await sql.connect(dbConfig);
+
+        const request = new sql.Request();
+
+        request.input("email", sql.VarChar, email);
+
+        const result = await request.query(
+            'SELECT * FROM CUENTAS WHERE CORREO = @email'
+        );
+
+        if (result.recordset.length === 0) {
+            return res.status(401).json({ message: "Correo o contraseña incorrectos." });
+        }
+
+        const user = result.recordset[0];
+
+        // Comparamos la contraseña con bcrypt
+        const password_correct = await bcrypt.compare(password, user["CONTRASEÑA"])
+
+        if (!password_correct) {
+            return res.status(401).json({ message: "Correo o contraseña incorrectos." });
+        }
+
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ message: "Clave secreta JWT no definida en el servidor." });
+        }
+
+        const token = jwt.sign({ id: user.ID, email: user.CORREO }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        res.status(200).json({ message: 'Login exitoso.', token })
+
+    } catch (error) {
+        res.status(500).json({ message: `Error interno en el servidor,` });
+    }
+
+})
 
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

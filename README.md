@@ -14,9 +14,16 @@ npm install react-router-dom@latest
 ```
 ---
 
+
 # BACKEND 
 
 ## Ingresar a la carpeta backend y escribir los siguientes comandos:
+
+## Cargar variables de entorno desde archivo .env
+```bash
+npm install dotenv
+```
+---
 
 ```bash
 npm init -y

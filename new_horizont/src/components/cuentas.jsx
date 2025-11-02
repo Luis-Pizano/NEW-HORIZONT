@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/cuentas.module.css";
-import { data } from "react-router-dom";
 
 const Cuentas = () => {
 
