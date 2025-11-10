@@ -11,6 +11,7 @@ import UpdatefromTema from "./components/update_tema"
 import Search from "./components/search_tema";
 import PageNotFound from "./components/404";
 import Cuentas from "./components/cuentas";
+import Protected from "./components/restrict_routes";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Registro" element={<Register />}></Route>
-          <Route path="/Subir_elemento" element= {<File />}></Route>
+          <Route path="/Subir_elemento" element= {<File /> }></Route>
           <Route path="/Temas" element= {<Get_them />}></Route>
           <Route path="/Tema/:id" element= {<Tema_detail />}></Route>
           <Route path="/Actualizar-tema/:id" element= {<UpdatefromTema />}></Route>

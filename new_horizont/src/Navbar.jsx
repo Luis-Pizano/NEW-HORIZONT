@@ -6,13 +6,22 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+   
     // Estados para previsualizar imagen y nombre
     const [results, setResults] = useState([]); // resultados del backend
+
     const [showPreview, setShowPreview] = useState(false); // controla si se muestra el dropdown
+
     const searchRef = useRef(null); // referencia para detectar clic fuera
+
     // Fin de estados para previsualizar imagen y nombre
     const navigate = useNavigate();
 
+    const [logout,setLogout] = useState(false);
+
+    const token = localStorage.getItem("token");
+
+    // ================================ fetch buscador ================================
     const handleSubmit = (e) => {
         e.preventDefault(); // Evita que la página se recargue
         if (searchTerm.trim() !== "") {
@@ -21,13 +30,14 @@ const Navbar = () => {
         }
     };
 
-
+    
     useEffect(() => {
         if (searchTerm.trim() === "") {
             setResults([]);
             return;
         }
 
+        
         const delay = setTimeout(async () => {
             try {
                 const res = await fetch(`http://localhost:8080/api/search?search=${searchTerm}`);
@@ -59,6 +69,38 @@ const Navbar = () => {
         setSearchTerm("");
     };
 
+    // ================================ Fin del fetch buscador ================================
+
+    // fetch logout
+
+    const Exit_Session = async (e) => {
+        e.preventDefault();
+        try {
+
+            const response = await fetch("http://localhost:8080/api/logout",{
+                method:"POST",
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // Envia el token al backend
+            }
+            })
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.removeItem("token")
+                setLogout(true)
+                navigate("/login")
+                console.log("Cierre de sesion exitoso.")
+            }
+            else{
+                console.error(data.message || "Error en el servidor interno.")
+            }
+            
+        } catch (error) {
+            console.error(`Ocurrio un error al intentar cerrrar la sesión, error: ${error}`);
+        }
+    }
+
     return (
         <nav>
             <div className="link-home">
@@ -67,17 +109,26 @@ const Navbar = () => {
             <ul>
                 <li><Link to="/Subir_elemento" className="link">Subir contenido</Link></li>
                 <li><Link to="/Temas" className="link">Nuestros temas</Link></li>
-                <li><Link to="/registro" className="link">Registro</Link></li>
-                <li><Link to="/login" className="link">Login</Link></li>
+                {!token && (
+                    <>
+                        <li><Link to="/registro" className="link">Registro</Link></li>
+                        <li><Link to="/login" className="link">Login</Link></li>
+                    </>
+                )}
 
                 <li className="dropdown">
-                    <button onClick={() => setIsOpen(!isOpen)}>Mi cuenta {isOpen ? "▲" : "▼"}</button>
-                    {isOpen && (
-                        <ul>
-                            <li><Link to="/Cuentas" className="link">Cuentas</Link></li>
-                            <li><Link to="/logout" className="link">Logout</Link></li>
-                        </ul>
+                    {!token && (
+                        <>
+                            <button onClick={() => setIsOpen(!isOpen)}>Mi cuenta {isOpen ? "▲" : "▼"}</button>
+                            {isOpen && (
+                                <ul>
+                                    <li><Link to="/Cuentas" className="link">Cuentas</Link></li>
+                                    <li><Link to="/logout" className="link" onClick={Exit_Session}>Logout</Link></li>
+                                </ul>
+                            )}
+                        </>
                     )}
+
                 </li>
 
 
@@ -85,7 +136,7 @@ const Navbar = () => {
                     <div className="buscador">
                         <input type="search" name="search" id="search" value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Buscar..."/>
+                            placeholder="Buscar..." />
                         <button className="button-search" type="submit">
                             <i className="fa-solid fa-magnifying-glass"></i>
                         </button>

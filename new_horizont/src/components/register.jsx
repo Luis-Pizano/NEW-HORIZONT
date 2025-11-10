@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../styles/register.module.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import Notification_Success from "./Notification_Success";
 import Notification_Error from "./Notification_Error";
 const Register = () => {

@@ -19,6 +19,13 @@ const Home = () => {
                             Nuestra razón de compartir radica en nuestra ética de transparencia como organización. Creemos que el conocimiento debe ser público y de uso libre para que las personas conozcan aquello que está más allá de nuestro planeta.
                         </p>
                     </div>
+                    <div className={styles.information}>
+                        <h2>Información</h2>
+                        <p>
+                            Si quieres subir algun tipo de contenido a nuestra pagina primero debes inicar sesión, una vez hecho esto en la barra 
+                            superior se te habilitara el link <strong>"Subir contenido"</strong>              
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

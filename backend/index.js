@@ -302,6 +302,21 @@ app.post('/api/login', async (req, res) => {
 
 })
 
+// Logout
+
+const removeToken = new Set();
+
+app.post('/api/logout', (req,res) => {
+
+    const authLogin = req.headers.authorization;
+    if (!authLogin) {
+       return res.status(401).json({message:`No hay token`})
+    }
+    const token = authLogin.split(' ')[1];
+    removeToken.add(token);
+    res.status(200).json({ message: "Logout exitoso." });
+})
+
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
