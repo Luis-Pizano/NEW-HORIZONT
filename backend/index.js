@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import sql from 'mssql';
 import cors from 'cors';
 import multer from 'multer';
@@ -68,6 +68,32 @@ app.post('/api/register', async (req, res) => {
         }
 
         res.status(500).json({ message: "Error al registrar usuario", error });
+    }
+});
+
+
+// Traer cuenta por ID
+app.get('/api/Cuentas/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await sql.connect(dbConfig);
+
+        const request = new sql.Request();
+        request.input('id', sql.Int, id);
+
+        const result = await request.query('SELECT * FROM CUENTAS WHERE ID = @id');
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ message: 'No se encontró la cuenta.' });
+        }
+
+        // Devolver solo la cuenta encontrada
+        res.status(200).json(result.recordset[0]);
+
+    } catch (error) {
+        console.error(`Error al traer la cuenta ${id}`, error);
+        res.status(500).json({ message: 'Error en el servidor.' });
     }
 });
 
@@ -241,6 +267,7 @@ app.get('/api/cuentas', async (req, res) => {
 
         const result = await connect.query('SELECT * FROM CUENTAS')
         const cuentas = result.recordset.map(user => ({
+            id: user.ID,
             nombre: user.NOMBRE,
             apellido_paterno: user.APELLIDO_PATERNO,
             apellido_materno: user.APELLIDO_MATERNO,

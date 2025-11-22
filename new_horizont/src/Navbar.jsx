@@ -117,7 +117,7 @@ const Navbar = () => {
                 )}
 
                 <li className="dropdown">
-                    {!token && (
+                    {token && (
                         <>
                             <button onClick={() => setIsOpen(!isOpen)}>Mi cuenta {isOpen ? "▲" : "▼"}</button>
                             {isOpen && (
