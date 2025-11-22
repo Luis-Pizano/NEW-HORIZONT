@@ -44,6 +44,7 @@ const Cuentas = () => {
                             <th>¿Es visitante?</th>
                             <th>¿Es administrador?</th>
                             <th>Fecha de creación</th>
+                            <th>Editar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,6 +58,7 @@ const Cuentas = () => {
                                 <td>{cuenta.visitante ? "Si" : "No"}</td>
                                 <td>{cuenta.administrador ? "Si" : "No"}</td>
                                 <td>{new Date(cuenta.fecha_creacion).toLocaleDateString()}</td>
+                                <td><button className={styles.editar}>Editar</button></td>
                             </tr>
                         )
 

@@ -97,6 +97,29 @@ app.get('/api/Cuentas/:id', async (req, res) => {
     }
 });
 
+//Editar cuenta por ID
+app.put('/api/editar_cuenta/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, last_name_father, last_name_Mother, phone_number, email } = req.body;
+
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('id', sql.Int, id);
+        request.input("name", sql.NVarChar(255), name);
+        request.input("last_name_father", sql.NVarChar(255), last_name_father);
+        request.input("last_name_Mother", sql.NVarChar(255), last_name_Mother || null);
+        request.input("phone_number", sql.NVarChar(50), phone_number);
+        request.input("email", sql.NVarChar(255), email);
+
+        await request.query(`UPDATE CUENTAS SET NOMBRE = @name, APELLIDO_PATERNO = @last_name_father,
+             APELLIDO_MATERNO = @last_name_Mother, TELEFONO = @phone_number, CORREO = @email WHERE ID = @id`)
+        res.status(200).json({ message: `Exito en la actualización de datos.` })
+    } catch (error) {
+        console.log(`Error en la actualización de esta cuenta, Cuenta de ID: ${id}, error ${error}`);
+    }
+})
 
 
 // Agregar tema
@@ -333,11 +356,11 @@ app.post('/api/login', async (req, res) => {
 
 const removeToken = new Set();
 
-app.post('/api/logout', (req,res) => {
+app.post('/api/logout', (req, res) => {
 
     const authLogin = req.headers.authorization;
     if (!authLogin) {
-       return res.status(401).json({message:`No hay token`})
+        return res.status(401).json({ message: `No hay token` })
     }
     const token = authLogin.split(' ')[1];
     removeToken.add(token);

@@ -44,3 +44,13 @@ td {
 .table tr:nth-child(even) {
   background: #d1d0d0;
 }
+
+.editar{
+  background: #2563eb;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.editar:hover{
+  background: #114bc8;
+}
