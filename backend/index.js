@@ -73,7 +73,7 @@ app.post('/api/register', async (req, res) => {
 
 
 // Traer cuenta por ID
-app.get('/api/Cuentas/:id', async (req, res) => {
+app.get('/api/Cuenta/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -332,6 +332,12 @@ app.post('/api/login', async (req, res) => {
 
         const user = result.recordset[0];
 
+        let rol = "visitante";
+        if (user.ADMINISTRADOR === true || user.ADMINISTRADOR === 1) {
+            rol = "administrador";
+        }
+
+
         // Comparamos la contraseña con bcrypt
         const password_correct = await bcrypt.compare(password, user["CONTRASEÑA"])
 
@@ -339,12 +345,13 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ message: "Correo o contraseña incorrectos." });
         }
 
+
         if (!process.env.JWT_SECRET) {
             return res.status(500).json({ message: "Clave secreta JWT no definida en el servidor." });
         }
 
-        const token = jwt.sign({ id: user.ID, email: user.CORREO }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        res.status(200).json({ message: 'Login exitoso.', token })
+        const token = jwt.sign({ id: user.ID, email: user.CORREO, rol }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        res.status(200).json({ message: 'Login exitoso.', token, rol })
 
     } catch (error) {
         res.status(500).json({ message: `Error interno en el servidor,` });

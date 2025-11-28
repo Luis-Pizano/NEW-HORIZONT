@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import styles from "../styles/register.module.css";
-import {useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import styles from "../styles/editar_cuenta.module.css";
+import { useNavigate, useParams } from "react-router-dom";
 import Notification_Success from "./Notification_Success";
 import Notification_Error from "./Notification_Error";
 
-const Register = () => {
+const Editar_Cuenta = () => {
+
     const [notification, setNotification] = useState(null); // success | error
 
     // Estado local para almacenar los datos del formulario
@@ -17,6 +18,8 @@ const Register = () => {
         email: "",
         password: ""
     });
+
+    const { id } = useParams();
 
     // Hook de navegación para redirigir al usuario después del registro
     const navigate = useNavigate();
@@ -38,14 +41,40 @@ const Register = () => {
         });
     };
 
+    // Precargar datos de cuenta
+    useEffect(() => {
+        const Precargar = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/Cuenta/${id}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    setFormData({
+                        name: data.NOMBRE,
+                        last_name_father: data.APELLIDO_PATERNO,
+                        last_name_Mother: data.APELLIDO_MATERNO,
+                        phone_number: data.TELEFONO,
+                        email: data.CORREO,
+                        password: "" // No traigas password del backend
+                    });
+                }
+            } catch (error) {
+                console.error(`Error en precargar los datos, Error: ${error}`);
+            }
+        };
+
+        Precargar();
+    }, [id]);
+
+
     // Función que se ejecuta al enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
 
         try {
             // Se realiza una solicitud POST a la API de registro con los datos del formulario
-            const response = await fetch("http://localhost:8080/api/register", {
-                method: "POST",
+            const response = await fetch(`http://localhost:8080/api/editar_cuenta/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -59,10 +88,10 @@ const Register = () => {
             // Si la respuesta fue exitosa, se muestra un mensaje y se redirige al login
             if (response.ok) {
                 setNotification("success"); // Muestra notificación de éxito
-                setTimeout(() => navigate("/Login"), 3000); // Redirige después de 4s
+                setTimeout(() => navigate("/Cuentas"), 3000); // Redirige después de 4s
             } else {
                 setNotification("error"); // Muestra notificación de error
-                setTimeout(() => {window.location.reload()}, 30000);
+                setTimeout(() => { window.location.reload() }, 30000);
             }
         } catch (error) {
             // Manejo de errores de red u otros problemas
@@ -71,21 +100,13 @@ const Register = () => {
         }
     };
 
-    // A partir de aquí se retorna el formulario que ve el usuario
-
-    // const testing = () => {
-    //     setNotification("success");
-    //     setNotification("error");
-    //     setTimeout(() => window.location.reload(), 3000);
-    // }
-
     return (
 
         <div className={styles.fondo}>
 
             {/* Notificaciones */}
             {notification === "success" && (
-                <Notification_Success message={`Exito en la creación de la cuenta.`} />
+                <Notification_Success message={`Cuenta ${id} actualizada exitosamente.`} />
             )}
             {/* Notificaciones */}
             {notification === "error" && (
@@ -123,14 +144,11 @@ const Register = () => {
                             <label htmlFor="email">Correo</label>
                             <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} required />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label htmlFor="password">Contraseña</label>
-                            <input type="password" name="password" id="password" value={formData.password} onChange={handleChange} required />
+                        <div className={styles.controllers}>
+                            <button type="submit" className={styles.btn_register}>Editar</button>
+                            <a href="/cuentas" className={styles.cancelar}>Cancelar</a>
                         </div>
-                        <div className={styles.return_login}>
-                            <a href="/login" className={styles.exintente_register}>¿Ya está registrado? Inicie sesión</a>
-                        </div>
-                        <button type="submit" className={styles.btn_register}>Registrarse</button>
+
                     </form>
                 </div>
             </div>
@@ -138,4 +156,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default Editar_Cuenta;

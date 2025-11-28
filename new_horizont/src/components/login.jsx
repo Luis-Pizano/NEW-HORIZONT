@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "../styles/login.module.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
@@ -17,6 +18,8 @@ const Login = () => {
     })
   }
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -29,6 +32,7 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("token", data.token);
+        navigate("/")
         console.log("Login exitoso.")
       }
 

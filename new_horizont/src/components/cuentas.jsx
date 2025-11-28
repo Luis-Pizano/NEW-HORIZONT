@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/cuentas.module.css";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Cuentas = () => {
 
     const [cuentas, setCuentas] = useState([])
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCuentas = async () => {
@@ -28,6 +31,10 @@ const Cuentas = () => {
         fetchCuentas();
 
     },[]);
+
+    const Editar = (id) =>{
+        navigate(`/Editar_cuenta/${id}`)
+    }
 
     return (
         <div className={styles.fondo}>
@@ -58,7 +65,7 @@ const Cuentas = () => {
                                 <td>{cuenta.visitante ? "Si" : "No"}</td>
                                 <td>{cuenta.administrador ? "Si" : "No"}</td>
                                 <td>{new Date(cuenta.fecha_creacion).toLocaleDateString()}</td>
-                                <td><button className={styles.editar}>Editar</button></td>
+                                <td><button className={styles.editar} onClick={() => Editar(cuenta.id)}>Editar</button></td>
                             </tr>
                         )
 

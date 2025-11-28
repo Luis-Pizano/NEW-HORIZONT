@@ -11,6 +11,7 @@ import UpdatefromTema from "./components/update_tema"
 import Search from "./components/search_tema";
 import PageNotFound from "./components/404";
 import Cuentas from "./components/cuentas";
+import Editar_Cuenta from "./components/editar_cuenta";
 import Protected from "./components/restrict_routes";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Login" element={<Login />} />
+          <Route path="/Editar_cuenta/:id" element={<Editar_Cuenta />}></Route>
           <Route path="/Registro" element={<Register />}></Route>
           <Route path="/Subir_elemento" element= {<File /> }></Route>
           <Route path="/Temas" element= {<Get_them />}></Route>
