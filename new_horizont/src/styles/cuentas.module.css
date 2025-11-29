@@ -59,3 +59,14 @@ td {
   position: relative;
   right:10px;
 }
+
+.eliminar{
+  background: #dc3545;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.eliminar:hover{
+  background: #b72a38;
+  border: none !important;
+}

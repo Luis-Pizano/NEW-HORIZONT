@@ -38,6 +38,25 @@ const Cuentas = () => {
         navigate(`/Editar_cuenta/${id}`)
     }
 
+    const eliminar_cuenta = async (id) => {
+         if (!window.confirm("¿Deseas eliminar esta cuenta?")) return;
+        try {
+            const response = await fetch(`http://localhost:8080/api/delete/${id}`,{
+                method:"DELETE"
+            })
+            const data = await response.json();
+            if (response.ok){
+                console.log(`Cuenta eliminada correctamente, ${data}.`)
+            // Actualizar la tabla sin recargar
+            setCuentas(prev => prev.filter(c => c.id !== id));
+        } else {
+            alert("Error al eliminar la cuenta");
+        }
+        } catch (error) {
+            console.error(`Error en la eliminación de la cuenta.`)
+        }
+    }
+
     return (
         <div className={styles.fondo}>
             <h2 className={styles.titulo}>Cuentas</h2>
@@ -56,6 +75,9 @@ const Cuentas = () => {
                             {rol === "administrador" && (
                                 <th>Editar</th>
                             )}
+                            {rol === "administrador" && (
+                                <th>Eliminar</th>
+                            )}
 
                         </tr>
                     </thead>
@@ -72,6 +94,9 @@ const Cuentas = () => {
                                 <td>{new Date(cuenta.fecha_creacion).toLocaleDateString()}</td>
                                 {rol === "administrador" && (
                                     <td><button className={styles.editar} onClick={() => Editar(cuenta.id)}><i class="fa-regular fa-pen-to-square"></i> Editar</button></td>
+                                )}
+                                {rol === "administrador" && (
+                                    <td><button className={styles.eliminar} onClick={() => eliminar_cuenta(cuenta.id)}><i class="fa-solid fa-trash"></i> Eliminar</button></td>
                                 )}
 
                             </tr>

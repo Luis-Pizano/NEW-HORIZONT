@@ -100,7 +100,7 @@ app.get('/api/Cuenta/:id', async (req, res) => {
 //Editar cuenta por ID
 app.put('/api/editar_cuenta/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, last_name_father, last_name_Mother, phone_number, email , visitante, administrador } = req.body;
+    const { name, last_name_father, last_name_Mother, phone_number, email, visitante, administrador } = req.body;
 
     try {
         await sql.connect(dbConfig);
@@ -152,6 +152,22 @@ app.post('/api/add_tema', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'Error al agregar tema' });
     }
 });
+
+// API de eliminar cuenta por ID
+app.delete('/api/delete/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input("id", sql.Int, id);
+
+        await request.query(`DELETE FROM CUENTAS WHERE ID = @id`)
+
+        res.status(200).json({ message: `Exito en la eliminación de la cuenta ${id}.` })
+    } catch (error) {
+        console.error(`Error al intentar eliminar la cuenta ${id}.`)
+    }
+})
 
 // Listar todos los temas
 app.get('/api/all_temas', async (req, res) => {
@@ -379,12 +395,12 @@ app.post('/api/logout', (req, res) => {
 
 //API eliminar cuenta por ID
 
-app.delete("/api/delete_cuenta/:id", async (req,res) => {
-    const {id} = req.params;
+app.delete("/api/delete_cuenta/:id", async (req, res) => {
+    const { id } = req.params;
     try {
         await sql.connect(dbConfig);
         const request = new sql.Request();
-        request.input("id",sql.Int(),id);
+        request.input("id", sql.Int(), id);
 
         request.query('') // FALTA LA QUERY DE DELETE
 
