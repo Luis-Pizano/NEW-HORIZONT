@@ -100,7 +100,7 @@ app.get('/api/Cuenta/:id', async (req, res) => {
 //Editar cuenta por ID
 app.put('/api/editar_cuenta/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, last_name_father, last_name_Mother, phone_number, email } = req.body;
+    const { name, last_name_father, last_name_Mother, phone_number, email , visitante, administrador } = req.body;
 
     try {
         await sql.connect(dbConfig);
@@ -112,9 +112,12 @@ app.put('/api/editar_cuenta/:id', async (req, res) => {
         request.input("last_name_Mother", sql.NVarChar(255), last_name_Mother || null);
         request.input("phone_number", sql.NVarChar(50), phone_number);
         request.input("email", sql.NVarChar(255), email);
+        request.input("visitante", sql.Bit, visitante ? 1 : 0);
+        request.input("administrador", sql.Bit, administrador ? 1 : 0);
 
         await request.query(`UPDATE CUENTAS SET NOMBRE = @name, APELLIDO_PATERNO = @last_name_father,
-             APELLIDO_MATERNO = @last_name_Mother, TELEFONO = @phone_number, CORREO = @email WHERE ID = @id`)
+             APELLIDO_MATERNO = @last_name_Mother, TELEFONO = @phone_number, CORREO = @email,
+             VISITANTE = @visitante, ADMINISTRADOR =@administrador WHERE ID = @id`)
         res.status(200).json({ message: `Exito en la actualización de datos.` })
     } catch (error) {
         console.log(`Error en la actualización de esta cuenta, Cuenta de ID: ${id}, error ${error}`);
@@ -372,6 +375,22 @@ app.post('/api/logout', (req, res) => {
     const token = authLogin.split(' ')[1];
     removeToken.add(token);
     res.status(200).json({ message: "Logout exitoso." });
+})
+
+//API eliminar cuenta por ID
+
+app.delete("/api/delete_cuenta/:id", async (req,res) => {
+    const {id} = req.params;
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input("id",sql.Int(),id);
+
+        request.query('') // FALTA LA QUERY DE DELETE
+
+    } catch (error) {
+        console.error(`Error para eliminar esta cuenta.`)
+    }
 })
 
 app.listen(PORT, () => {

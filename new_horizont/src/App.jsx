@@ -22,14 +22,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Login" element={<Login />} />
-          <Route path="/Editar_cuenta/:id" element={<Editar_Cuenta />}></Route>
+          <Route path="/Editar_cuenta/:id" element={<Protected><Editar_Cuenta /></Protected>}></Route>
           <Route path="/Registro" element={<Register />}></Route>
           <Route path="/Subir_elemento" element= {<File /> }></Route>
           <Route path="/Temas" element= {<Get_them />}></Route>
           <Route path="/Tema/:id" element= {<Tema_detail />}></Route>
-          <Route path="/Actualizar-tema/:id" element= {<UpdatefromTema />}></Route>
+          <Route path="/Actualizar-tema/:id" element= {<Protected><UpdatefromTema /></Protected>}></Route>
           <Route path="/search/:q" element={<Search />} />
-          <Route path="/Cuentas" element={<Cuentas />} />
+          <Route path="/Cuentas" element={<Protected><Cuentas /></Protected>} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

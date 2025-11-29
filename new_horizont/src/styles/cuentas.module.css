@@ -54,3 +54,8 @@ td {
 .editar:hover{
   background: #114bc8;
 }
+
+.editar i{
+  position: relative;
+  right:10px;
+}

@@ -7,7 +7,9 @@ const Get_them = () => {
     const [temas, setTemas] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const temasPorPagina  = 8;
+    const temasPorPagina = 8;
+
+    const rol = localStorage.getItem("rol");
 
     const Navigate = useNavigate()
 
@@ -96,9 +98,11 @@ const Get_them = () => {
                                         <h2>{tema.nombre}</h2>
                                     </div>
                                     <div className={styles.back}>
-                                        <button onClick={() => update(tema.id)}>
-                                            <i className="fa-solid fa-file-pen"></i>
-                                        </button>
+                                        {rol === "administrador" && (
+                                            <button onClick={() => update(tema.id)}>
+                                                <i className="fa-solid fa-file-pen"></i>
+                                            </button>
+                                        )}
                                         <p>Presiona saber más para obtener información sobre esta imagen</p>
                                         <button className={styles.btn_redirect} onClick={() => verDetalle(tema.id)}>Saber más</button>
                                     </div>

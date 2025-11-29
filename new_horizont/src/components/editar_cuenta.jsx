@@ -16,7 +16,8 @@ const Editar_Cuenta = () => {
         last_name_Mother: "",
         phone_number: "",
         email: "",
-        password: ""
+        visitante: false,
+        administrador: false
     });
 
     const { id } = useParams();
@@ -55,7 +56,8 @@ const Editar_Cuenta = () => {
                         last_name_Mother: data.APELLIDO_MATERNO,
                         phone_number: data.TELEFONO,
                         email: data.CORREO,
-                        password: "" // No traigas password del backend
+                        visitante: Boolean(data.VISITANTE),
+                        administrador: Boolean(data.ADMINISTRADOR),
                     });
                 }
             } catch (error) {
@@ -143,6 +145,16 @@ const Editar_Cuenta = () => {
                         <div className={styles.formGroup}>
                             <label htmlFor="email">Correo</label>
                             <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} required />
+                        </div>
+                        <div className={styles.roles}>
+                            <label>Visitante</label>
+                            <input type="radio" name="rol" id="rol" value="visitante" checked={formData.visitante === true} 
+                            onChange={() =>setFormData({...formData,visitante: true,administrador: false })} />
+                        </div>
+                        <div className={styles.roles}>
+                            <label>Administrador</label>
+                            <input type="radio" name="rol" value="administrador" checked={formData.administrador === true}
+                             onChange={() =>setFormData({...formData,visitante: false,administrador: true })} />
                         </div>
                         <div className={styles.controllers}>
                             <button type="submit" className={styles.btn_register}>Editar</button>

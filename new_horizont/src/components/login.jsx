@@ -10,6 +10,7 @@ const Login = () => {
     password: ""
   });
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setlogin({
@@ -32,6 +33,7 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("rol", data.rol);
         navigate("/")
         console.log("Login exitoso.")
       }

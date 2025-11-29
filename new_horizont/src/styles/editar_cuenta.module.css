@@ -140,6 +140,21 @@ input:focus{
     color: red;
 }
 
+.roles {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.roles label {
+    position: static;
+}
+
+
+.roles input[type="radio"] {
+    accent-color: #218838;
+}
+
 @media screen and (max-width: 720px) {
     .contenido {
       width: 95%;

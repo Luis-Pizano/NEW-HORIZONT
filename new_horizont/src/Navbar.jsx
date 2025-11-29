@@ -20,6 +20,7 @@ const Navbar = () => {
     const [logout,setLogout] = useState(false);
 
     const token = localStorage.getItem("token");
+    const rol = localStorage.getItem("rol");
 
     // ================================ fetch buscador ================================
     const handleSubmit = (e) => {
@@ -122,7 +123,9 @@ const Navbar = () => {
                             <button onClick={() => setIsOpen(!isOpen)}>Mi cuenta {isOpen ? "▲" : "▼"}</button>
                             {isOpen && (
                                 <ul>
+                                {rol === "administrador" && (
                                     <li><Link to="/Cuentas" className="link">Cuentas</Link></li>
+                                )}
                                     <li><Link to="/logout" className="link" onClick={Exit_Session}>Logout</Link></li>
                                 </ul>
                             )}

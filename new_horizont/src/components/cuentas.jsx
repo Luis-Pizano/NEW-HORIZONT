@@ -5,8 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 const Cuentas = () => {
 
     const [cuentas, setCuentas] = useState([])
+    const rol = localStorage.getItem("rol")
 
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchCuentas = async () => {
@@ -30,9 +32,9 @@ const Cuentas = () => {
         }
         fetchCuentas();
 
-    },[]);
+    }, []);
 
-    const Editar = (id) =>{
+    const Editar = (id) => {
         navigate(`/Editar_cuenta/${id}`)
     }
 
@@ -51,7 +53,10 @@ const Cuentas = () => {
                             <th>¿Es visitante?</th>
                             <th>¿Es administrador?</th>
                             <th>Fecha de creación</th>
-                            <th>Editar</th>
+                            {rol === "administrador" && (
+                                <th>Editar</th>
+                            )}
+
                         </tr>
                     </thead>
                     <tbody>
@@ -65,7 +70,10 @@ const Cuentas = () => {
                                 <td>{cuenta.visitante ? "Si" : "No"}</td>
                                 <td>{cuenta.administrador ? "Si" : "No"}</td>
                                 <td>{new Date(cuenta.fecha_creacion).toLocaleDateString()}</td>
-                                <td><button className={styles.editar} onClick={() => Editar(cuenta.id)}>Editar</button></td>
+                                {rol === "administrador" && (
+                                    <td><button className={styles.editar} onClick={() => Editar(cuenta.id)}><i class="fa-regular fa-pen-to-square"></i> Editar</button></td>
+                                )}
+
                             </tr>
                         )
 
