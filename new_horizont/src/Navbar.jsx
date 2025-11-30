@@ -6,18 +6,19 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isOpen, setIsOpen] = useState(false);
-   
+
     // Estados para previsualizar imagen y nombre
     const [results, setResults] = useState([]); // resultados del backend
 
     const [showPreview, setShowPreview] = useState(false); // controla si se muestra el dropdown
 
     const searchRef = useRef(null); // referencia para detectar clic fuera
+    const menuRef = useRef(null); // referencia para detectar clic fuera
 
     // Fin de estados para previsualizar imagen y nombre
     const navigate = useNavigate();
 
-    const [logout,setLogout] = useState(false);
+    const [logout, setLogout] = useState(false);
 
     const token = localStorage.getItem("token");
     const rol = localStorage.getItem("rol");
@@ -31,14 +32,14 @@ const Navbar = () => {
         }
     };
 
-    
+
     useEffect(() => {
         if (searchTerm.trim() === "") {
             setResults([]);
             return;
         }
 
-        
+
         const delay = setTimeout(async () => {
             try {
                 const res = await fetch(`http://localhost:8080/api/search?search=${searchTerm}`);
@@ -64,6 +65,18 @@ const Navbar = () => {
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setIsOpen(false); // Cierra el menú
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+
     const handleSelect = (tema) => {
         navigate(`/tema/${tema.id}`);
         setShowPreview(true);
@@ -78,12 +91,12 @@ const Navbar = () => {
         e.preventDefault();
         try {
 
-            const response = await fetch("http://localhost:8080/api/logout",{
-                method:"POST",
+            const response = await fetch("http://localhost:8080/api/logout", {
+                method: "POST",
                 headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // Envia el token al backend
-            }
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` // Envia el token al backend
+                }
             })
             const data = await response.json();
 
@@ -93,10 +106,10 @@ const Navbar = () => {
                 navigate("/login")
                 console.log("Cierre de sesion exitoso.")
             }
-            else{
+            else {
                 console.error(data.message || "Error en el servidor interno.")
             }
-            
+
         } catch (error) {
             console.error(`Ocurrio un error al intentar cerrrar la sesión, error: ${error}`);
         }
@@ -117,15 +130,15 @@ const Navbar = () => {
                     </>
                 )}
 
-                <li className="dropdown">
+                <li className="dropdown" ref={menuRef}>
                     {token && (
                         <>
                             <button onClick={() => setIsOpen(!isOpen)}>Mi cuenta {isOpen ? "▲" : "▼"}</button>
                             {isOpen && (
                                 <ul>
-                                {rol === "administrador" && (
-                                    <li><Link to="/Cuentas" className="link">Cuentas</Link></li>
-                                )}
+                                    {rol === "administrador" && (
+                                        <li><Link to="/Cuentas" className="link">Cuentas</Link></li>
+                                    )}
                                     <li><Link to="/logout" className="link" onClick={Exit_Session}>Logout</Link></li>
                                 </ul>
                             )}
