@@ -34,6 +34,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("rol", data.rol);
+        localStorage.setItem("userId", data.id);
         navigate("/")
         console.log("Login exitoso.")
       }

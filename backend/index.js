@@ -370,7 +370,7 @@ app.post('/api/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.ID, email: user.CORREO, rol }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        res.status(200).json({ message: 'Login exitoso.', token, rol })
+        res.status(200).json({ message: 'Login exitoso.', token, rol,id:user.ID })
 
     } catch (error) {
         res.status(500).json({ message: `Error interno en el servidor,` });

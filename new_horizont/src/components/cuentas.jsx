@@ -6,6 +6,7 @@ const Cuentas = () => {
 
     const [cuentas, setCuentas] = useState([])
     const rol = localStorage.getItem("rol")
+    const userId = localStorage.getItem("userId");
 
     const navigate = useNavigate();
 
@@ -18,7 +19,8 @@ const Cuentas = () => {
                 const result = await response.json();
                 if (response.ok) {
                     console.log(`Exito en el select para cuentas, ${result}`);
-                    setCuentas(result);
+                    setCuentas(result.filter(c => c.id !== Number(userId)));
+
                 }
                 else {
                     console.log(`Error en la operación de listado.`);
