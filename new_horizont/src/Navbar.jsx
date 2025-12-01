@@ -7,6 +7,8 @@ const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
+    const [mobileOpen, setMobileOpen] = useState(false); // Estado para moviles
+
     // Estados para previsualizar imagen y nombre
     const [results, setResults] = useState([]); // resultados del backend
 
@@ -117,6 +119,67 @@ const Navbar = () => {
 
     return (
         <nav>
+            {/* Menu para telefonos */}
+            {mobileOpen && (
+                <div className={`mobile-menu ${mobileOpen ? "open" : "closed"}`}>
+                   <button onClick={() => setMobileOpen(false)}><i class="fa-solid fa-x"></i></button>
+                    <Link to="/" onClick={() => setMobileOpen(false)}>Home</Link>
+                    <Link to="/Subir_elemento" onClick={() => setMobileOpen(false)}>Subir contenido</Link>
+                    <Link to="/Temas" onClick={() => setMobileOpen(false)}>Nuestros temas</Link>
+                    
+
+                    {!token && (
+                        <>
+                            <Link to="/registro" onClick={() => setMobileOpen(false)}>Registro</Link>
+                            <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
+                        </>
+                    )}
+                    <form onSubmit={handleSubmit} className="buscador-form" ref={searchRef}>
+                    <div className="buscador">
+                        <input type="search" name="search" id="search" value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Buscar..." />
+                        <button className="button-search" type="submit">
+                            <i id="icon_search" className="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+
+                    {/* Dropdown de vista previa */}
+                    {showPreview && results.length > 0 && (
+                        <div className="search-preview">
+                            {results.slice(0, 5).map((tema) => (
+                                <div key={tema.id} className="preview-item" onClick={() => handleSelect(tema)}>
+                                    {tema.imagen && tema.mime_type ? (
+                                        <img src={`data:${tema.mime_type};base64,${tema.imagen}`} alt={tema.nombre} />
+                                    ) : (
+                                        <div className="no-image">🖼️</div>
+                                    )}
+                                    <span>{tema.nombre}</span>
+                                </div>
+                            ))}
+                            {results.length > 5 && (
+                                <div className="ver-todos" onClick={() => navigate(`/search/${searchTerm}`)}>
+                                    Ver todos los resultados →
+                                </div>
+                            )
+                            }
+                        </div>
+                    )}
+                </form>
+
+                    {token && (
+                        <>
+                            {rol === "administrador" && (
+                                <Link to="/Cuentas" onClick={() => setMobileOpen(false)}>Cuentas</Link>
+                            )}
+                            <Link to="/logout" className="link" onClick={Exit_Session}>Logout</Link>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {/* Fin menu para telefonos*/}
+
             <div className="link-home">
                 <Link to="/" className="link">Home</Link>
             </div>
@@ -180,11 +243,10 @@ const Navbar = () => {
                         </div>
                     )}
                 </form>
-
-                <div className="icon-burger">
-                    <i className="fa-solid fa-bars"></i>
-                </div>
             </ul>
+            <div className="icon-burger" onClick={() => setMobileOpen(!mobileOpen)}>
+                    <i className="fa-solid fa-bars"></i>
+            </div>
         </nav>
     );
 };

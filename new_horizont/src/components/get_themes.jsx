@@ -99,9 +99,9 @@ const Get_them = () => {
                                     </div>
                                     <div className={styles.back}>
                                         {rol === "administrador" && (
-                                            <button onClick={() => update(tema.id)}>
+                                            <div onClick={() => update(tema.id)}>
                                                 <i className="fa-solid fa-file-pen"></i>
-                                            </button>
+                                            </div>
                                         )}
                                         <p>Presiona saber más para obtener información sobre esta imagen</p>
                                         <button className={styles.btn_redirect} onClick={() => verDetalle(tema.id)}>Saber más</button>

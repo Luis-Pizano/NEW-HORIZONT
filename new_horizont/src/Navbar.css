@@ -84,7 +84,7 @@ ul li {
 /* FINAL EFECTO BARRA*/
 
 /* Estilos del search*/
-.buscador-form{
+.buscador-form {
     position: relative;
 }
 
@@ -111,81 +111,74 @@ ul li {
     position: absolute;
     right: 0;
     top: 0;
+    border-radius: 0px;
     font-size: 10px;
     background: rgb(108, 108, 231);
     width: 20%;
     height: 100%;
 }
 
-.icon-burger {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    color: #fff;
-    font-size: 25px;
-    right: 1rem;
-    top: 0.5rem;
-    cursor: pointer;
-}
+
+
 /* Contenedor del dropdown */
 .search-preview {
-  position: absolute;
-  top: 100%;
-  left: 10vh;
-  width: 280px;
-  background: #1b1b1b;
-  color: white;
-  border: 1px solid #333;
-  border-radius: 8px;
-  margin-top: 5px;
-  z-index: 1000;
-  max-height: 350px;
-  overflow-y: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 100%;
+    left: 10vh;
+    width: 280px;
+    background: #1b1b1b;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-top: 5px;
+    z-index: 1000;
+    max-height: 350px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Cada item */
 .preview-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .preview-item:hover {
-  background: #2c2c2c;
+    background: #2c2c2c;
 }
 
 .preview-item img {
-  width: 45px;
-  height: 45px;
-  object-fit: cover;
-  border-radius: 6px;
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
 }
 
 .no-image {
-  width: 45px;
-  height: 45px;
-  background: #444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
+    width: 45px;
+    height: 45px;
+    background: #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
 }
 
 .ver-todos {
-  padding: 10px;
-  text-align: center;
-  color: #ccc;
-  cursor: pointer;
-  font-size: 0.9rem;
+    padding: 10px;
+    text-align: center;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .ver-todos:hover {
-  color: white;
-  background: #2c2c2c;
+    color: white;
+    background: #2c2c2c;
 }
 
 /* Fin de estilos del search*/
@@ -199,7 +192,8 @@ ul li {
     color: #fff;
 }
 
-.dropdown button:hover,.button-search:hover {
+.dropdown button:hover,
+.button-search:hover {
     background-color: rgb(65, 65, 250);
 }
 
@@ -252,3 +246,100 @@ ul li {
     background: black;
 }
 
+.icon-burger {
+    display: none;
+}
+
+/* =============================== */
+/*   ESTILOS RESPONSIVE MÓVIL      */
+/* =============================== */
+
+@media (max-width: 768px) {
+     /* MUESTRA el icono hamburguesa */
+    .icon-burger {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        color: #fff;
+        font-size: 25px;
+        right: 1rem;
+        top: 0.5rem;
+        cursor: pointer;
+    }
+
+    /* Oculta los links del menú */
+    nav ul {
+        display: none;
+    }
+
+    /* Menú móvil lateral */
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 240px;
+        height: 100vh;
+        background: rgb(16, 16, 16);
+        z-index: 2000;
+        padding-top: 4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-left: 1rem;
+        transition: transform .3s ease;
+    }
+
+    /* Oculto por defecto */
+    .mobile-menu.closed {
+        transform: translateX(100%);
+    }
+
+    /* Visible */
+    .mobile-menu.open {
+        transform: translateX(0);
+    }
+
+    .mobile-menu a {
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .buscador-form {
+        display: flex;
+        position: relative;
+        right: 5rem;
+    }
+
+    .buscador-form .button-search {
+        background: rgb(93, 93, 246);
+        color: #fff;
+        border-radius: 0px;
+    }
+
+    #icon_search {
+        position: relative;
+        font-size: 18px;
+        inset: 0;
+    }
+
+    .button-search:hover {
+        background-color: rgb(65, 65, 250);
+    }
+
+    .mobile-menu i {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        color: #fff;
+        font-size: 25px;
+        right: 1rem;
+        top: 0.5rem;
+        cursor: pointer;
+    }
+
+    .mobile-menu button {
+        background: none;
+    }
+
+
+}
