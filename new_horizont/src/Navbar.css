@@ -307,7 +307,7 @@ ul li {
     .buscador-form {
         display: flex;
         position: relative;
-        right: 5rem;
+        right: 7rem;
     }
 
     .buscador-form .button-search {
@@ -342,4 +342,13 @@ ul li {
     }
 
 
+}
+
+@keyframes menu_mobile_display {
+    0%   { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+.mobile-menu.open {
+    animation: menu_mobile_display .5s ease forwards;
 }
